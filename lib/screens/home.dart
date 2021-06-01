@@ -1,21 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:gea/api/application.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String route = '/';
-  final ApplicationClient client = ApplicationClient();
-
-  void _incrementCounter() {
-      client.create("someName");
-  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Дашборд"),
-      ),
-      body: Center(
+    return Container(
+      child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -25,11 +16,7 @@ class HomeScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      color: Colors.white,
     );
   }
 }
