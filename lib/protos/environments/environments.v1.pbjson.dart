@@ -50,20 +50,3 @@ const EnvironmentInfo$json = const {
 
 /// Descriptor for `EnvironmentInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List environmentInfoDescriptor = $convert.base64Decode('Cg9FbnZpcm9ubWVudEluZm8SDgoCaWQYASABKANSAmlkEhIKBG5hbWUYAiABKAlSBG5hbWUSFAoFc3RhdGUYAyABKAlSBXN0YXRlEhAKA3VybBgEIAEoCVIDdXJsEhAKA3JlZhgFIAEoCVIDcmVmEhAKA3NoYRgGIAEoCVIDc2hhEhoKCGNpU3RhdHVzGAcgASgJUghjaVN0YXR1cxISCgRjaUlkGAggASgDUgRjaUlkEhYKBnVzZXJJZBgJIAEoA1IGdXNlcklkEhoKCHVzZXJOYW1lGAogASgJUgh1c2VyTmFtZRIcCgl1cGRhdGVkQWQYCyABKAlSCXVwZGF0ZWRBZA==');
-const $core.Map<$core.String, $core.dynamic> EnvironmentsServiceBase$json = const {
-  '1': 'Environments',
-  '2': const [
-    const {'1': 'Get', '2': '.gitlab_aggregator.v1.EnvironmentID', '3': '.gitlab_aggregator.v1.EnvironmentInfo', '4': const {}},
-    const {'1': 'List', '2': '.gitlab_aggregator.v1.EnvironmentName', '3': '.gitlab_aggregator.v1.EnvironmentInfo', '4': const {}, '6': true},
-  ],
-};
-
-@$core.Deprecated('Use environmentsServiceDescriptor instead')
-const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> EnvironmentsServiceBase$messageJson = const {
-  '.gitlab_aggregator.v1.EnvironmentID': EnvironmentID$json,
-  '.gitlab_aggregator.v1.EnvironmentInfo': EnvironmentInfo$json,
-  '.gitlab_aggregator.v1.EnvironmentName': EnvironmentName$json,
-};
-
-/// Descriptor for `Environments`. Decode as a `google.protobuf.ServiceDescriptorProto`.
-final $typed_data.Uint8List environmentsServiceDescriptor = $convert.base64Decode('CgxFbnZpcm9ubWVudHMSUwoDR2V0EiMuZ2l0bGFiX2FnZ3JlZ2F0b3IudjEuRW52aXJvbm1lbnRJRBolLmdpdGxhYl9hZ2dyZWdhdG9yLnYxLkVudmlyb25tZW50SW5mbyIAElgKBExpc3QSJS5naXRsYWJfYWdncmVnYXRvci52MS5FbnZpcm9ubWVudE5hbWUaJS5naXRsYWJfYWdncmVnYXRvci52MS5FbnZpcm9ubWVudEluZm8iADAB');

@@ -5,13 +5,10 @@
 // @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
-import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
-
-import '../common/common.pb.dart' as $2;
 
 class AppName extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'AppName', package: const $pb.PackageName(const $core.bool.fromEnvironment('protobuf.omit_message_names') ? '' : 'gitlab_aggregator.v1'), createEmptyInstance: create)
@@ -243,31 +240,5 @@ class Service extends $pb.GeneratedMessage {
   $core.bool hasEnvironment() => $_has(1);
   @$pb.TagNumber(2)
   void clearEnvironment() => clearField(2);
-}
-
-class ApplicationsApi {
-  $pb.RpcClient _client;
-  ApplicationsApi(this._client);
-
-  $async.Future<AppInfo> create_($pb.ClientContext? ctx, AppName request) {
-    var emptyResponse = AppInfo();
-    return _client.invoke<AppInfo>(ctx, 'Applications', 'Create', request, emptyResponse);
-  }
-  $async.Future<AppInfo> get($pb.ClientContext? ctx, AppName request) {
-    var emptyResponse = AppInfo();
-    return _client.invoke<AppInfo>(ctx, 'Applications', 'Get', request, emptyResponse);
-  }
-  $async.Future<AppInfo> list($pb.ClientContext? ctx, $2.EmptyMessage request) {
-    var emptyResponse = AppInfo();
-    return _client.invoke<AppInfo>(ctx, 'Applications', 'List', request, emptyResponse);
-  }
-  $async.Future<AppInfo> update($pb.ClientContext? ctx, AppInfo request) {
-    var emptyResponse = AppInfo();
-    return _client.invoke<AppInfo>(ctx, 'Applications', 'Update', request, emptyResponse);
-  }
-  $async.Future<$2.EmptyMessage> delete($pb.ClientContext? ctx, AppInfo request) {
-    var emptyResponse = $2.EmptyMessage();
-    return _client.invoke<$2.EmptyMessage>(ctx, 'Applications', 'Delete', request, emptyResponse);
-  }
 }
 

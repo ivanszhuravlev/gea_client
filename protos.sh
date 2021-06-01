@@ -1,1 +1,1 @@
-mkdir ./lib/protos && protoc --dart_out=./lib/protos/ --proto_path=./proto $(find ./proto -type f -iname "*.proto")
+mkdir ./lib/protos && protoc --dart_out=grpc:./lib/protos/ --proto_path=./proto $(find ./proto -type f -iname "*.proto")

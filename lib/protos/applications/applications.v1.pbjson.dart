@@ -8,8 +8,6 @@
 import 'dart:core' as $core;
 import 'dart:convert' as $convert;
 import 'dart:typed_data' as $typed_data;
-import '../common/common.pbjson.dart' as $2;
-
 @$core.Deprecated('Use appNameDescriptor instead')
 const AppName$json = const {
   '1': 'AppName',
@@ -54,25 +52,3 @@ const Service$json = const {
 
 /// Descriptor for `Service`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List serviceDescriptor = $convert.base64Decode('CgdTZXJ2aWNlEhgKB3Byb2plY3QYASABKANSB3Byb2plY3QSIAoLZW52aXJvbm1lbnQYAiABKANSC2Vudmlyb25tZW50');
-const $core.Map<$core.String, $core.dynamic> ApplicationsServiceBase$json = const {
-  '1': 'Applications',
-  '2': const [
-    const {'1': 'Create', '2': '.gitlab_aggregator.v1.AppName', '3': '.gitlab_aggregator.v1.AppInfo', '4': const {}},
-    const {'1': 'Get', '2': '.gitlab_aggregator.v1.AppName', '3': '.gitlab_aggregator.v1.AppInfo', '4': const {}},
-    const {'1': 'List', '2': '.common.EmptyMessage', '3': '.gitlab_aggregator.v1.AppInfo', '4': const {}, '6': true},
-    const {'1': 'Update', '2': '.gitlab_aggregator.v1.AppInfo', '3': '.gitlab_aggregator.v1.AppInfo', '4': const {}},
-    const {'1': 'Delete', '2': '.gitlab_aggregator.v1.AppInfo', '3': '.common.EmptyMessage', '4': const {}},
-  ],
-};
-
-@$core.Deprecated('Use applicationsServiceDescriptor instead')
-const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> ApplicationsServiceBase$messageJson = const {
-  '.gitlab_aggregator.v1.AppName': AppName$json,
-  '.gitlab_aggregator.v1.AppInfo': AppInfo$json,
-  '.gitlab_aggregator.v1.Contour': Contour$json,
-  '.gitlab_aggregator.v1.Service': Service$json,
-  '.common.EmptyMessage': $2.EmptyMessage$json,
-};
-
-/// Descriptor for `Applications`. Decode as a `google.protobuf.ServiceDescriptorProto`.
-final $typed_data.Uint8List applicationsServiceDescriptor = $convert.base64Decode('CgxBcHBsaWNhdGlvbnMSSAoGQ3JlYXRlEh0uZ2l0bGFiX2FnZ3JlZ2F0b3IudjEuQXBwTmFtZRodLmdpdGxhYl9hZ2dyZWdhdG9yLnYxLkFwcEluZm8iABJFCgNHZXQSHS5naXRsYWJfYWdncmVnYXRvci52MS5BcHBOYW1lGh0uZ2l0bGFiX2FnZ3JlZ2F0b3IudjEuQXBwSW5mbyIAEj8KBExpc3QSFC5jb21tb24uRW1wdHlNZXNzYWdlGh0uZ2l0bGFiX2FnZ3JlZ2F0b3IudjEuQXBwSW5mbyIAMAESSAoGVXBkYXRlEh0uZ2l0bGFiX2FnZ3JlZ2F0b3IudjEuQXBwSW5mbxodLmdpdGxhYl9hZ2dyZWdhdG9yLnYxLkFwcEluZm8iABI/CgZEZWxldGUSHS5naXRsYWJfYWdncmVnYXRvci52MS5BcHBJbmZvGhQuY29tbW9uLkVtcHR5TWVzc2FnZSIA');

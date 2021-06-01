@@ -5,7 +5,6 @@
 // @dart = 2.12
 // ignore_for_file: annotate_overrides,camel_case_types,unnecessary_const,non_constant_identifier_names,library_prefixes,unused_import,unused_shown_name,return_of_invalid_type,unnecessary_this,prefer_final_fields
 
-import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:fixnum/fixnum.dart' as $fixnum;
@@ -318,19 +317,5 @@ class EnvironmentInfo extends $pb.GeneratedMessage {
   $core.bool hasUpdatedAd() => $_has(10);
   @$pb.TagNumber(11)
   void clearUpdatedAd() => clearField(11);
-}
-
-class EnvironmentsApi {
-  $pb.RpcClient _client;
-  EnvironmentsApi(this._client);
-
-  $async.Future<EnvironmentInfo> get($pb.ClientContext? ctx, EnvironmentID request) {
-    var emptyResponse = EnvironmentInfo();
-    return _client.invoke<EnvironmentInfo>(ctx, 'Environments', 'Get', request, emptyResponse);
-  }
-  $async.Future<EnvironmentInfo> list($pb.ClientContext? ctx, EnvironmentName request) {
-    var emptyResponse = EnvironmentInfo();
-    return _client.invoke<EnvironmentInfo>(ctx, 'Environments', 'List', request, emptyResponse);
-  }
 }
 

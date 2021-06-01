@@ -43,20 +43,3 @@ const ProjectInfo$json = const {
 
 /// Descriptor for `ProjectInfo`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List projectInfoDescriptor = $convert.base64Decode('CgtQcm9qZWN0SW5mbxIOCgJpZBgBIAEoA1ICaWQSEgoEbmFtZRgCIAEoCVIEbmFtZRIgCgtkZXNjcmlwdGlvbhgDIAEoCVILZGVzY3JpcHRpb24SFgoGd2ViVXJsGAQgASgJUgZ3ZWJVcmwSHAoJYXZhdGFyVXJsGAUgASgJUglhdmF0YXJVcmwSHAoJcmVhZG1lVXJsGAYgASgJUglyZWFkbWVVcmw=');
-const $core.Map<$core.String, $core.dynamic> ProjectsServiceBase$json = const {
-  '1': 'Projects',
-  '2': const [
-    const {'1': 'Get', '2': '.gitlab_aggregator.v1.ProjectID', '3': '.gitlab_aggregator.v1.ProjectInfo', '4': const {}},
-    const {'1': 'List', '2': '.gitlab_aggregator.v1.ProjectName', '3': '.gitlab_aggregator.v1.ProjectInfo', '4': const {}, '6': true},
-  ],
-};
-
-@$core.Deprecated('Use projectsServiceDescriptor instead')
-const $core.Map<$core.String, $core.Map<$core.String, $core.dynamic>> ProjectsServiceBase$messageJson = const {
-  '.gitlab_aggregator.v1.ProjectID': ProjectID$json,
-  '.gitlab_aggregator.v1.ProjectInfo': ProjectInfo$json,
-  '.gitlab_aggregator.v1.ProjectName': ProjectName$json,
-};
-
-/// Descriptor for `Projects`. Decode as a `google.protobuf.ServiceDescriptorProto`.
-final $typed_data.Uint8List projectsServiceDescriptor = $convert.base64Decode('CghQcm9qZWN0cxJLCgNHZXQSHy5naXRsYWJfYWdncmVnYXRvci52MS5Qcm9qZWN0SUQaIS5naXRsYWJfYWdncmVnYXRvci52MS5Qcm9qZWN0SW5mbyIAElAKBExpc3QSIS5naXRsYWJfYWdncmVnYXRvci52MS5Qcm9qZWN0TmFtZRohLmdpdGxhYl9hZ2dyZWdhdG9yLnYxLlByb2plY3RJbmZvIgAwAQ==');
