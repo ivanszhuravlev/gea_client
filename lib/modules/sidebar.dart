@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gea/models/app_model.dart';
-import 'package:gea/screens/app.dart';
+import 'package:gea/screens/app_screen.dart';
 import 'package:provider/provider.dart';
 
 class Sidebar extends StatelessWidget {
