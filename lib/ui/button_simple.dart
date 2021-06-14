@@ -11,6 +11,7 @@ class SimpleButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return RawMaterialButton(
       fillColor: AppColors.textLight,
+      clipBehavior: Clip.hardEdge,
       child: Padding(
         padding:
         EdgeInsets.only(left: 8.0, top: 6.0, right: 8.0, bottom: 6.0),

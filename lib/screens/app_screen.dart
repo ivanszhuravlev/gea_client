@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gea/models/app_model.dart';
+import 'package:gea/screens/add_contour_screen.dart';
 import 'package:provider/provider.dart';
 
 class AppScreen extends StatelessWidget {
@@ -7,6 +8,10 @@ class AppScreen extends StatelessWidget {
   final String appId;
 
   AppScreen({Key? key, this.appId = ""}) : super(key: key);
+
+  onPress(BuildContext context) {
+    Navigator.of(context).pushNamed(AddContourScreen.route);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +35,8 @@ class AppScreen extends StatelessWidget {
             Text(
               app.name,
             ),
-            Text(app.id)
+            Text(app.id),
+            ElevatedButton(onPressed: () => onPress(context), child: Text("Create contour"))
           ],
         ),
       ),

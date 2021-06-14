@@ -1,17 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:gea/api/application.dart';
-import 'package:gea/types/application.dart';
+import 'package:gea/api/project.dart';
+import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:collection/collection.dart';
 
 class AppModel extends ChangeNotifier {
-  final List<ApplicationInfo> _apps = [];
+  final List<AppInfo> _apps = [];
   final ApplicationClient client = ApplicationClient();
+  final ProjectClient projectClient = ProjectClient();
 
   AppModel() {
     this.list();
   }
 
-  List<ApplicationInfo> get apps => this._apps;
+  List<AppInfo> get apps => this._apps;
 
   void create(String name) async{
     var newApp = await client.create(name);
@@ -25,7 +27,7 @@ class AppModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  ApplicationInfo? item({Key? key, String id = ""}) {
-    return _apps.firstWhereOrNull((element) => element.id == id, );
+  AppInfo? item({Key? key, String id = ""}) {
+    return _apps.firstWhereOrNull((element) => element.id == id,);
   }
 }

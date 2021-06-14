@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:gea/protos/applications/applications.v1.pbgrpc.dart';
 import 'package:gea/protos/common/common.pb.dart';
-import 'package:gea/types/application.dart';
+// import 'package:gea/types/application.dart';
 import 'package:grpc/grpc_web.dart';
 
 class ApplicationClient {
@@ -15,15 +15,18 @@ class ApplicationClient {
     _client = new ApplicationsClient(channel);
   }
 
-  Future<ApplicationInfo> create(String name) async {
-    var response = await _client.create(AppName()..name = name);
-    return ApplicationInfo(response.id, response.name);
+  Future<AppInfo> create(String name) async {
+    return await _client.create(AppName()..name = name);
   }
 
-  Future<Iterable<ApplicationInfo>> list() async {
+  Future<Iterable<AppInfo>> list() async {
     return await _client
         .list(EmptyMessage())
-        .map((info) => ApplicationInfo(info.id, info.name))
         .toList();
+  }
+
+  Future<AppInfo> createContour({required AppInfo appInfo, required Contour contour}) async {
+    appInfo.contour.add(contour);
+    return await _client.update(appInfo);
   }
 }

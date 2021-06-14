@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gea/modules/forms/add_app_form.dart';
+import 'package:gea/modules/forms/add_contour_form.dart';
 
-class AddAppScreen extends StatelessWidget {
-  static String route = '/add-app';
+class AddContourScreen extends StatelessWidget {
+  static String route = '/add-contour';
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +13,7 @@ class AddAppScreen extends StatelessWidget {
           padding: EdgeInsets.all(12.0),
           child: SizedBox(
             width: 400.0,
-            child: AddAppForm(),
+            child: AddContourForm(),
           )),
     );
   }

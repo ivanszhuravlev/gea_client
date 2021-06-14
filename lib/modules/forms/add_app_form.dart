@@ -26,7 +26,6 @@ class AddAppForm extends StatelessWidget {
         onSubmit: (List<FormValue> values) {
           model.create(values.elementAt(0).value);
         },
-        constraints: BoxConstraints(maxWidth: 200),
         labelSubmit: "Create app");
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gea/constants/app_colors.dart';
 import 'package:gea/modules/sidebar.dart';
 import 'package:gea/screens/add_app_screen.dart';
+import 'package:gea/screens/add_contour_screen.dart';
 import 'package:gea/screens/app_screen.dart';
 import 'package:gea/screens/home_screen.dart';
 import 'package:collection/collection.dart';
@@ -66,6 +67,10 @@ List<Path> paths = [
   Path(
     r'^' + AddAppScreen.route,
         (context, match) => AddAppScreen(),
+  ),
+  Path(
+    r'^' + AddContourScreen.route,
+        (context, match) => AddContourScreen(),
   ),
   Path(
     r'^' + HomeScreen.route,
