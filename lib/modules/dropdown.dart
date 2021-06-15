@@ -5,20 +5,19 @@ class Dropdown<T> extends StatelessWidget {
   final List<T> items;
   final Widget Function(T) renderItem;
 
-  Dropdown(
-      {required this.items, required this.renderItem});
+  Dropdown({
+    required this.items,
+    required this.renderItem,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Container(
-        decoration: new BoxDecoration(color: AppColors.border),
-        child: Wrap(
+      decoration: new BoxDecoration(color: AppColors.border),
+      child: Wrap(
           direction: Axis.horizontal,
           children: items.map(renderItem).toList(),
-            clipBehavior: Clip.hardEdge
-        ),
+          clipBehavior: Clip.hardEdge),
     );
   }
 }

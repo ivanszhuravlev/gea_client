@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gea/constants/app_colors.dart';
 
-class SimpleButton extends StatelessWidget {
-  final Function()? onPress;
-  final String? label;
+class IconTextButton extends StatelessWidget {
+  final Function() onPress;
+  final String label;
+  final IconData icon;
 
-  SimpleButton({Key? key, this.onPress, this.label}) : super(key: key);
+  IconTextButton({required this.onPress, required this.label, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -18,8 +19,9 @@ class SimpleButton extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
+            Icon(icon),
             Text(
-              label ?? '',
+              label,
               maxLines: 1,
               style: TextStyle(
                   color: AppColors.darkContrast,
@@ -31,7 +33,7 @@ class SimpleButton extends StatelessWidget {
       ),
       constraints: const BoxConstraints(minWidth: 0.0, minHeight: 0.0),
       visualDensity: VisualDensity.compact,
-      onPressed: onPress!,
+      onPressed: onPress,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0))),
     );

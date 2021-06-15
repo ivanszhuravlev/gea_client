@@ -19,7 +19,7 @@ class Header extends StatelessWidget {
           SimpleButton(onPress: () => onAddApp(context), label: "Add an app"),
         ]),
       ),
-      color: AppColors.header,
+      color: AppColors.darkContrast,
     );
   }
 
