@@ -7,4 +7,5 @@ class AppColors {
   static const lighterCaption = Color(0xFF9098A9);
   static const textLight = Color(0xFFFFFAFF);
   static const background = Color(0xFFFFFFFF);
+  static const shadow = Color(0x22000000);
 }

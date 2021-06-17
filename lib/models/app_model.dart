@@ -30,4 +30,14 @@ class AppModel extends ChangeNotifier {
   AppInfo? item({Key? key, String id = ""}) {
     return _apps.firstWhereOrNull((element) => element.id == id,);
   }
+
+  void addContour(String appId, Contour contour) async {
+    final app = _apps.firstWhereOrNull((element) => element.id == appId);
+
+    if (app == null || appId.length == 0) {
+      throw Error();
+    }
+
+    await client.createContour(appInfo: app, contour: contour);
+  }
 }

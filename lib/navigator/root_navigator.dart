@@ -69,8 +69,8 @@ List<Path> paths = [
         (context, match) => AddAppScreen(),
   ),
   Path(
-    r'^' + AddContourScreen.route,
-        (context, match) => AddContourScreen(),
+    r'^/app/([\w-]+)' + AddContourScreen.route,
+        (context, match) => AddContourScreen(appId: match),
   ),
   Path(
     r'^' + HomeScreen.route,

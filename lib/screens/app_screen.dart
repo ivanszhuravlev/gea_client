@@ -10,7 +10,7 @@ class AppScreen extends StatelessWidget {
   AppScreen({Key? key, this.appId = ""}) : super(key: key);
 
   onPress(BuildContext context) {
-    Navigator.of(context).pushNamed(AddContourScreen.route);
+    Navigator.of(context).pushNamed('/app/$appId${AddContourScreen.route}');
   }
 
   @override

@@ -11,11 +11,10 @@ import 'package:gea/ui/text_separator.dart';
 import 'package:gea/utils/form_generator.dart';
 import 'package:provider/provider.dart';
 
-import '../dropdown.dart';
+import '../dropdown/dropdown.dart';
 
 class AddContourForm extends StatefulWidget {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController contourName = TextEditingController();
 
   @override
   _FormState createState() {
@@ -26,7 +25,6 @@ class AddContourForm extends StatefulWidget {
 class _FormState extends State<AddContourForm> {
   @override
   void dispose() {
-    widget.contourName.dispose();
     super.dispose();
   }
 
@@ -47,7 +45,7 @@ class _FormState extends State<AddContourForm> {
                 labelText: "Contour name",
               ),
               key: Key("contour_name"),
-              controller: widget.contourName,
+              controller: contourModel.contourName,
               validator: _validator,
             ),
           ),
@@ -101,9 +99,11 @@ class _FormState extends State<AddContourForm> {
           ).toList(),
           ElevatedButton(
               onPressed: () {
-                contourModel.keys.forEach((element) {
-                  print("HELLO: ");
-                });
+                if (widget._formKey.currentState!.validate()) {
+                  // final contour = contourModel.submit();
+                  appModel.addContour(contourModel.appId ?? '', contourModel.submit());
+                  Navigator.of(context).pop();
+                }
               },
               child: Text("Create"))
         ],
@@ -113,7 +113,7 @@ class _FormState extends State<AddContourForm> {
 }
 
 class ContourRow extends StatelessWidget {
-  final _debounce = Debounce(delay: Duration(milliseconds: 200));
+  final _debounce = Debounce(delay: Duration(milliseconds: 0));
   final String rowKey;
 
   ContourRow({required this.rowKey}) : super(key: Key(rowKey));
@@ -134,7 +134,6 @@ class ContourRow extends StatelessWidget {
               child: SizedBox(
                 width: 244,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TextFormField(
                       decoration: InputDecoration(
@@ -149,13 +148,21 @@ class ContourRow extends StatelessWidget {
                         });
                       },
                     ),
-                    _ProjectsDropdown(
-                      rowKey: rowKey,
-                      onChosen: (String name) {
-                        model.projectNames[rowKey]?.value =
-                            TextEditingValue(text: name);
-                      },
-                    )
+                    Padding(
+                      padding: EdgeInsets.only(top: 12),
+                      child: _ProjectsDropdown(
+                        rowKey: rowKey,
+                        onChosen: (String name) {
+                          print("CHOOSE");
+                          print(rowKey);
+                          print(model.projectNames);
+                          print(TextEditingValue(text: name));
+
+                          model.projectNames[rowKey]?.value =
+                              TextEditingValue(text: name);
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -180,13 +187,16 @@ class ContourRow extends StatelessWidget {
                       });
                     },
                   ),
-                  _EnvsDropdown(
-                    rowKey: rowKey,
-                    onChosen: (String name) {
-                      model.envNames[rowKey]?.value =
-                          TextEditingValue(text: name);
-                    },
-                  )
+                  Padding(
+                    padding: EdgeInsets.only(top: 12),
+                    child: _EnvsDropdown(
+                      rowKey: rowKey,
+                      onChosen: (String name) {
+                        model.envNames[rowKey]?.value =
+                            TextEditingValue(text: name);
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -213,12 +223,11 @@ class _ProjectsDropdown extends StatelessWidget {
         ? SizedBox.shrink()
         : Dropdown<ProjectInfo>(
             items: projects,
-            renderItem: (project) => SimpleButton(
-                onPress: () {
-                  contourModel.chooseProject(project, rowKey);
-                  onChosen(project.name);
-                },
-                label: project.name),
+            onPressed: (project) {
+              contourModel.chooseProject(project, rowKey);
+              onChosen(project.name);
+            },
+            renderItem: (project) => Text(project.name),
           );
   }
 }
@@ -239,12 +248,11 @@ class _EnvsDropdown extends StatelessWidget {
         ? SizedBox.shrink()
         : Dropdown<EnvironmentInfo>(
             items: environments,
-            renderItem: (env) => SimpleButton(
-                onPress: () {
-                  contourModel.chooseEnv(env, rowKey);
-                  onChosen(env.name);
-                },
-                label: env.name),
+            onPressed: (env) {
+              contourModel.chooseEnv(env, rowKey);
+              onChosen(env.name);
+            },
+            renderItem: (env) => Text(env.name),
           );
   }
 }

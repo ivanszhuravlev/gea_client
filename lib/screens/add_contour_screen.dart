@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:gea/constants/app_colors.dart';
+import 'package:gea/models/contour_model.dart';
 import 'package:gea/models/fonts.dart';
-import 'package:gea/modules/forms/add_app_form.dart';
 import 'package:gea/modules/forms/add_contour_form.dart';
+import 'package:provider/provider.dart';
 
 class AddContourScreen extends StatelessWidget {
   static String route = '/add-contour';
+  final String appId;
+
+  AddContourScreen({Key? key, this.appId = ""}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    var contourModel = Provider.of<ContourModel>(context, listen: false);
+    
+    contourModel.addApp(appId);
+
     return Container(
       alignment: Alignment.center,
       child: Padding(
