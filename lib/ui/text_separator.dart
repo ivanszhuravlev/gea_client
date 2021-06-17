@@ -4,8 +4,9 @@ import 'package:gea/models/fonts.dart';
 
 class TextSeparator extends StatelessWidget {
   final String text;
+  final Widget? childRight;
 
-  TextSeparator({required this.text});
+  TextSeparator({required this.text, this.childRight});
 
   @override
   Widget build(BuildContext context) {
@@ -15,16 +16,30 @@ class TextSeparator extends StatelessWidget {
         Divider(
           color: AppColors.lighterCaption,
         ),
-        Container(
-          decoration: new BoxDecoration(color: AppColors.background),
-          child:
-          Padding(padding: EdgeInsets.only(right: 4), child:
-          Text(
-            text,
-            style:
-                TextStyle(color: AppColors.lighterCaption, fontSize: FontSizes.caption, backgroundColor: AppColors.background),
-          ),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Container(
+              decoration: new BoxDecoration(color: AppColors.background),
+              child: Padding(
+                padding: EdgeInsets.only(right: 4),
+                child: Text(
+                  text,
+                  style: TextStyle(
+                      color: AppColors.lighterCaption,
+                      fontSize: FontSizes.caption,
+                      backgroundColor: AppColors.background),
+                ),
+              ),
+            ),
+            Container(
+              decoration: new BoxDecoration(color: AppColors.background),
+              child: Padding(
+                padding: EdgeInsets.only(left: 12),
+                child: childRight ?? SizedBox.shrink(),
+              ),
+            ),
+          ],
         ),
       ],
     );

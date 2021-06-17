@@ -46,7 +46,7 @@ class RootNavigator extends StatelessWidget {
                         child: VerticalDivider(color: AppColors.border),
                       ),
                       Expanded(
-                        child: matchedPath.builder(context, match),
+                        child: SingleChildScrollView(child: matchedPath.builder(context, match)),
                       ),
                     ],
                   ),

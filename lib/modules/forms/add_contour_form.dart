@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:gea/models/app_model.dart';
 import 'package:gea/models/contour_model.dart';
@@ -49,17 +51,35 @@ class _FormState extends State<AddContourForm> {
               validator: _validator,
             ),
           ),
-          ...contourModel.contours.asMap().entries.map(
-            // ...Iterable<int>.generate(contourModel.contoursCount).toList().map(
+          ...contourModel.keys.asMap().entries.map(
             (entry) {
               final index = entry.key;
-              final model = entry.value;
-              final isLast = index == contourModel.contours.length - 1;
+              final key = entry.value;
+              final isLast = index == contourModel.keys.length - 1;
               final title = index == 0
                   ? "Find your project and its environment"
                   : "Add one more project";
 
-              List<Widget> children = [ContourRow(title: title)];
+              List<Widget> children = [
+                SizedBox(
+                  width: 500,
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 48),
+                    child: TextSeparator(
+                      text: title,
+                      childRight: index == 0
+                          ? null
+                          : SimpleButton(
+                              label: "Delete",
+                              onPress: () {
+                                contourModel.removeContour(key);
+                              },
+                            ),
+                    ),
+                  ),
+                ),
+                ContourRow(rowKey: key),
+              ];
 
               if (isLast) {
                 children.add(
@@ -69,25 +89,20 @@ class _FormState extends State<AddContourForm> {
                       label: "Add project",
                       icon: Icons.add,
                       onPress: () {
-                        contourModel.addContour();
+                        contourModel.init();
                       },
                     ),
                   ),
                 );
               }
 
-              return ChangeNotifierProvider(
-                create: (context) => model,
-                child: Column(
-                  children: children,
-                ),
-              );
+              return Column(children: children);
             },
           ).toList(),
           ElevatedButton(
               onPressed: () {
-                contourModel.contours.forEach((element) {
-                  print("HELLO: " + (element.chosenProject?.name ?? "none"));
+                contourModel.keys.forEach((element) {
+                  print("HELLO: ");
                 });
               },
               child: Text("Create"))
@@ -99,26 +114,18 @@ class _FormState extends State<AddContourForm> {
 
 class ContourRow extends StatelessWidget {
   final _debounce = Debounce(delay: Duration(milliseconds: 200));
-  final String title;
+  final String rowKey;
 
-  ContourRow({required this.title});
+  ContourRow({required this.rowKey}) : super(key: Key(rowKey));
 
   @override
   Widget build(BuildContext context) {
-    var contourModel = Provider.of<ContourFormModel>(context, listen: true);
+    var model = Provider.of<ContourModel>(context, listen: true);
 
     return Column(
       children: [
-        SizedBox(
-          width: 500,
-          child: Padding(
-            padding: EdgeInsets.only(top: 32),
-            child: TextSeparator(
-              text: this.title,
-            ),
-          ),
-        ),
         Row(
+          key: Key("row-" + rowKey),
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -133,18 +140,20 @@ class ContourRow extends StatelessWidget {
                       decoration: InputDecoration(
                         labelText: "Project name",
                       ),
-                      key: Key("project_name"),
-                      controller: contourModel.projectName,
+                      key: Key("project_name" + rowKey),
+                      controller: model.projectNames[rowKey],
                       validator: _validator,
                       onChanged: (value) {
                         _debounce.run(() {
-                          contourModel.listProjects(value);
+                          model.listProjects(value, rowKey);
                         });
                       },
                     ),
                     _ProjectsDropdown(
+                      rowKey: rowKey,
                       onChosen: (String name) {
-                        contourModel.projectName.value = TextEditingValue(text: name);
+                        model.projectNames[rowKey]?.value =
+                            TextEditingValue(text: name);
                       },
                     )
                   ],
@@ -158,22 +167,24 @@ class ContourRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextFormField(
-                    enabled: contourModel.chosenProject != null,
+                    enabled: model.chosenProjects[rowKey] != null,
                     decoration: InputDecoration(
                       labelText: "Environment name",
                     ),
-                    key: Key("env_name"),
-                    controller: contourModel.envName,
+                    key: Key("env_name" + rowKey),
+                    controller: model.envNames[rowKey],
                     validator: _validator,
                     onChanged: (value) {
                       _debounce.run(() {
-                        contourModel.listEnvs(value);
+                        model.listEnvs(value, rowKey);
                       });
                     },
                   ),
                   _EnvsDropdown(
+                    rowKey: rowKey,
                     onChosen: (String name) {
-                      contourModel.envName.value = TextEditingValue(text: name);
+                      model.envNames[rowKey]?.value =
+                          TextEditingValue(text: name);
                     },
                   )
                 ],
@@ -188,21 +199,23 @@ class ContourRow extends StatelessWidget {
 
 class _ProjectsDropdown extends StatelessWidget {
   final void Function(String) onChosen;
+  final String rowKey;
 
-  _ProjectsDropdown({required this.onChosen});
+  _ProjectsDropdown({required this.rowKey, required this.onChosen})
+      : super(key: Key(rowKey));
 
   @override
   Widget build(BuildContext context) {
-    var contourModel = context.watch<ContourFormModel>();
-    var projects = contourModel.projects;
+    var contourModel = context.watch<ContourModel>();
+    var projects = contourModel.projectResults[rowKey] ?? [];
 
-    return projects.length == 0 || contourModel.chosenProject != null
+    return projects.length == 0 || contourModel.chosenProjects[rowKey] != null
         ? SizedBox.shrink()
         : Dropdown<ProjectInfo>(
             items: projects,
             renderItem: (project) => SimpleButton(
                 onPress: () {
-                  contourModel.chooseProject(project);
+                  contourModel.chooseProject(project, rowKey);
                   onChosen(project.name);
                 },
                 label: project.name),
@@ -212,21 +225,23 @@ class _ProjectsDropdown extends StatelessWidget {
 
 class _EnvsDropdown extends StatelessWidget {
   final void Function(String) onChosen;
+  final String rowKey;
 
-  _EnvsDropdown({required this.onChosen});
+  _EnvsDropdown({required this.rowKey, required this.onChosen})
+      : super(key: Key(rowKey));
 
   @override
   Widget build(BuildContext context) {
-    var contourModel = context.watch<ContourFormModel>();
-    var environments = contourModel.environments;
+    var contourModel = context.watch<ContourModel>();
+    var environments = contourModel.envResults[rowKey] ?? [];
 
-    return environments.length == 0 || contourModel.chosenEnv != null
+    return environments.length == 0 || contourModel.chosenEnvs[rowKey] != null
         ? SizedBox.shrink()
         : Dropdown<EnvironmentInfo>(
             items: environments,
             renderItem: (env) => SimpleButton(
                 onPress: () {
-                  contourModel.chooseEnv(env);
+                  contourModel.chooseEnv(env, rowKey);
                   onChosen(env.name);
                 },
                 label: env.name),

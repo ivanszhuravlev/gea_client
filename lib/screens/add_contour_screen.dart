@@ -31,7 +31,7 @@ class AddContourScreen extends StatelessWidget {
                         color: AppColors.darkCaption, fontSize: FontSizes.caption),
                   ),
                 ),
-                AddContourForm(),
+                new AddContourForm(),
               ],
             ),
           )),
