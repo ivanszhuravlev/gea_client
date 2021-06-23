@@ -46,7 +46,14 @@ class RootNavigator extends StatelessWidget {
                         child: VerticalDivider(color: AppColors.border),
                       ),
                       Expanded(
-                        child: SingleChildScrollView(child: matchedPath.builder(context, match)),
+                        child: SizedBox.expand(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
+                            child: SingleChildScrollView(
+                              child: matchedPath.builder(context, match),
+                            ),
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -66,11 +73,11 @@ List<Path> paths = [
   ),
   Path(
     r'^' + AddAppScreen.route,
-        (context, match) => AddAppScreen(),
+    (context, match) => AddAppScreen(),
   ),
   Path(
     r'^/app/([\w-]+)' + AddContourScreen.route,
-        (context, match) => AddContourScreen(appId: match),
+    (context, match) => AddContourScreen(appId: match),
   ),
   Path(
     r'^' + HomeScreen.route,

@@ -3,6 +3,7 @@ import 'package:gea/constants/app_colors.dart';
 import 'package:gea/models/contour_model.dart';
 import 'package:gea/models/fonts.dart';
 import 'package:gea/modules/forms/add_contour_form.dart';
+import 'package:gea/ui/heading.dart';
 import 'package:provider/provider.dart';
 
 class AddContourScreen extends StatelessWidget {
@@ -27,11 +28,7 @@ class AddContourScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Add new contour",
-                  style: TextStyle(
-                      color: AppColors.darkContrast, fontSize: FontSizes.h1, fontWeight: FontWeight.bold),
-                ),
+                Heading(text: "Add new contour"),
                 Padding(
                   padding: EdgeInsets.only(top: 6, bottom: 12),
                   child: Text(

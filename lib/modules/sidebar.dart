@@ -9,11 +9,11 @@ class Sidebar extends StatelessWidget {
     var model = context.watch<AppModel>();
     return Container(
       child: Padding(
-        padding: EdgeInsets.all(12.0),
+        padding: EdgeInsets.symmetric(vertical: 24, horizontal: 12),
         child: Column(
           children: model.apps
               .map((app) => TextButton(
-                  onPressed: () => onAppPress(app.id, context), child: Text(app.name)))
+                  onPressed: () => onAppPress(app.appInfo.id, context), child: Text(app.appInfo.name)))
               .toList(),
           mainAxisSize: MainAxisSize.max,
         ),

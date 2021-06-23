@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gea/models/app_model.dart';
+import 'package:gea/models/fonts.dart';
 import 'package:gea/screens/add_contour_screen.dart';
+import 'package:gea/ui/heading.dart';
 import 'package:provider/provider.dart';
 
 class AppScreen extends StatelessWidget {
@@ -28,17 +30,27 @@ class AppScreen extends StatelessWidget {
     }
 
     return Container(
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              app.name,
-            ),
-            Text(app.id),
-            ElevatedButton(onPressed: () => onPress(context), child: Text("Create contour"))
-          ],
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(bottom: 24),
+              child: Heading(
+                text: app.appInfo.name,
+              )),
+          Row(
+            children: [
+              Heading(
+                fontSize: FontSizes.h4,
+                text: app.appInfo.contour.length.toString(),
+              ),
+              Text(app.appInfo.id),
+            ],
+          ),
+          ElevatedButton(
+              onPressed: () => onPress(context), child: Text("Create contour"))
+        ],
       ),
       color: Colors.white,
     );

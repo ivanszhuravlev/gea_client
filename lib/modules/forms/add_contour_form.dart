@@ -153,7 +153,6 @@ class ContourRow extends StatelessWidget {
                       child: _ProjectsDropdown(
                         rowKey: rowKey,
                         onChosen: (String name) {
-                          print("CHOOSE");
                           print(rowKey);
                           print(model.projectNames);
                           print(TextEditingValue(text: name));

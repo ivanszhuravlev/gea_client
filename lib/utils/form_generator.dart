@@ -44,7 +44,6 @@ class _FormGeneratorState extends State<FormGenerator> {
           ...widget.fields.asMap().entries.map((entry) {
             var index = entry.key;
             var field = entry.value;
-            widget.controllers[index].value = TextEditingValue(text: "HELLO");
             List<Widget> itemBuilder = [
               TextFormField(
                 decoration: InputDecoration(
