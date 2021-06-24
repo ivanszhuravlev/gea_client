@@ -8,4 +8,7 @@ class AppColors {
   static const textLight = Color(0xFFFFFAFF);
   static const background = Color(0xFFFFFFFF);
   static const shadow = Color(0x22000000);
+  static const accent = Color(0xFF72B2F7);
+  static const accentLight = Color(0xFFA0C8F2);
+  static const accentLighter = Color(0xFFe0f0ff);
 }

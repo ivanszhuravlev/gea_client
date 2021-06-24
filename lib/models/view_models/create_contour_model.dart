@@ -9,7 +9,7 @@ import 'package:gea/protos/applications/applications.v1.pbgrpc.dart';
 import 'package:gea/protos/environments/environments.v1.pb.dart';
 import 'package:gea/protos/projects/projects.v1.pbgrpc.dart';
 
-class ContourModel extends ChangeNotifier {
+class CreateContourModel extends ChangeNotifier {
   final ProjectClient projectClient = ProjectClient();
   final EnvironmentClient envClient = EnvironmentClient();
 
@@ -21,7 +21,7 @@ class ContourModel extends ChangeNotifier {
 
   List<String> _keys = [];
 
-  ContourModel() {
+  CreateContourModel() {
     final newKey = _random.nextInt(1000).toString();
     _keys.add(newKey);
 

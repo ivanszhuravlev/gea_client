@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
-// import 'package:gea/protos/applications/applications.v1.pb.dart';
-// import 'package:gea/protos/applications/applications.v1.pbgrpc.dart';
-import 'package:gea/protos/common/common.pb.dart';
 import 'package:gea/protos/projects/projects.v1.pbgrpc.dart';
 import 'package:grpc/grpc_web.dart';
+import 'package:fixnum/fixnum.dart';
 
 class ProjectClient {
   late final ProjectsClient _client;
@@ -19,4 +16,7 @@ class ProjectClient {
     return await _client.list(ProjectName(name: name)).toList();
   }
 
+  Future<ProjectInfo> get(Int64 projectId) {
+    return _client.get(ProjectID(id: projectId));
+  }
 }

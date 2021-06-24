@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gea/models/app_model.dart';
+import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/utils/form_generator.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +10,7 @@ class AddAppForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var model = context.watch<AppModel>();
+    var model = context.watch<AppsListModel>();
     return FormGenerator(
         fields: [
           Field(

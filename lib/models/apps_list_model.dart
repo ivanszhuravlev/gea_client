@@ -4,12 +4,12 @@ import 'package:gea/api/project.dart';
 import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:collection/collection.dart';
 
-class AppModel extends ChangeNotifier {
+class AppsListModel extends ChangeNotifier {
   final List<AppInfo> _apps = [];
   final ApplicationClient client = ApplicationClient();
   final ProjectClient projectClient = ProjectClient();
 
-  AppModel() {
+  AppsListModel() {
     this.list();
   }
 

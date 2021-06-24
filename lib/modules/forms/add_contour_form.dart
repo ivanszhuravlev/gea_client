@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:gea/models/app_model.dart';
-import 'package:gea/models/contour_model.dart';
+import 'package:gea/models/apps_list_model.dart';
+import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/protos/environments/environments.v1.pb.dart';
 import 'package:gea/protos/projects/projects.v1.pb.dart';
 import 'package:gea/ui/button_icon_text.dart';
@@ -30,8 +30,8 @@ class _FormState extends State<AddContourForm> {
 
   @override
   Widget build(BuildContext context) {
-    var appModel = context.watch<AppModel>();
-    var contourModel = Provider.of<ContourModel>(context, listen: true);
+    var appModel = context.watch<AppsListModel>();
+    var contourModel = Provider.of<CreateContourModel>(context, listen: true);
 
     return Form(
       key: widget._formKey,
@@ -120,7 +120,7 @@ class ContourRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var model = Provider.of<ContourModel>(context, listen: true);
+    var model = Provider.of<CreateContourModel>(context, listen: true);
 
     return Column(
       children: [
@@ -215,7 +215,7 @@ class _ProjectsDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var contourModel = context.watch<ContourModel>();
+    var contourModel = context.watch<CreateContourModel>();
     var projects = contourModel.projectResults[rowKey] ?? [];
 
     return projects.length == 0 || contourModel.chosenProjects[rowKey] != null
@@ -240,7 +240,7 @@ class _EnvsDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var contourModel = context.watch<ContourModel>();
+    var contourModel = context.watch<CreateContourModel>();
     var environments = contourModel.envResults[rowKey] ?? [];
 
     return environments.length == 0 || contourModel.chosenEnvs[rowKey] != null

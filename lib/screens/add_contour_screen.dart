@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gea/constants/app_colors.dart';
-import 'package:gea/models/contour_model.dart';
+import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/models/fonts.dart';
 import 'package:gea/modules/forms/add_contour_form.dart';
 import 'package:gea/ui/heading.dart';
@@ -14,9 +14,8 @@ class AddContourScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var contourModel = Provider.of<CreateContourModel>(context, listen: false);
 
-    var contourModel = Provider.of<ContourModel>(context, listen: false);
-    
     contourModel.addApp(appId);
 
     return Container(
@@ -34,10 +33,14 @@ class AddContourScreen extends StatelessWidget {
                   child: Text(
                     "It will represent an 'environment' and include several projects",
                     style: TextStyle(
-                        color: AppColors.darkCaption, fontSize: FontSizes.caption),
+                        color: AppColors.darkCaption,
+                        fontSize: FontSizes.caption),
                   ),
                 ),
-                new AddContourForm(),
+                ChangeNotifierProvider<CreateContourModel>(
+                  create: (context) => CreateContourModel(),
+                  child: AddContourForm(),
+                ),
               ],
             ),
           )),
