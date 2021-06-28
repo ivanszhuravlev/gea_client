@@ -5,8 +5,8 @@ import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/protos/environments/environments.v1.pb.dart';
 import 'package:gea/protos/projects/projects.v1.pb.dart';
-import 'package:gea/ui/button_icon_text.dart';
-import 'package:gea/ui/button_simple.dart';
+import 'package:gea/ui/buttons/button_icon_text.dart';
+import 'package:gea/ui/buttons/button_simple.dart';
 import 'package:gea/ui/text_separator.dart';
 import 'package:gea/utils/form_generator.dart';
 import 'package:provider/provider.dart';
@@ -100,8 +100,7 @@ class _FormState extends State<AddContourForm> {
           ElevatedButton(
               onPressed: () {
                 if (widget._formKey.currentState!.validate()) {
-                  // final contour = contourModel.submit();
-                  appModel.addContour(contourModel.appId ?? '', contourModel.submit());
+                  appModel.addContour(contourModel.appId, contourModel.submit());
                   Navigator.of(context).pop();
                 }
               },

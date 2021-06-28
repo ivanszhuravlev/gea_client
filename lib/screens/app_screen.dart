@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:gea/constants/app_colors.dart';
 import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/fonts.dart';
 import 'package:gea/models/view_models/app_screen_model.dart';
 import 'package:gea/modules/app_table.dart';
+import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:gea/screens/add_contour_screen.dart';
+import 'package:gea/ui/buttons/accent_button.dart';
 import 'package:gea/ui/heading.dart';
 import 'package:provider/provider.dart';
 
@@ -44,6 +45,15 @@ class _AppScreenContent extends StatelessWidget {
     Navigator.of(context).pushNamed('/app/$appId${AddContourScreen.route}');
   }
 
+  onDeleteService({
+    required BuildContext context,
+    required Contour contour,
+    required ServiceInfo service,
+  }) {
+    Provider.of<AppScreenModel>(context, listen: false)
+        .deleteService(contour, service);
+  }
+
   @override
   Widget build(BuildContext context) {
     final model = context.watch<AppScreenModel>();
@@ -68,22 +78,24 @@ class _AppScreenContent extends StatelessWidget {
                     children: [
                       Heading(fontSize: FontSizes.h4, text: contour.name),
                       Padding(
-                        padding: EdgeInsets.symmetric(vertical: 32),
+                        padding: EdgeInsets.only(bottom: 32, top: 12),
                         child: AppTable(
-                          serviceInfos: services[contour.name],
-                        ),
+                          contour: contour,
+                            serviceInfos: services[contour.name],
+                            onDelete: onDeleteService),
                       ),
                     ],
                   ),
                 )
                 .toList(),
           ),
-          ElevatedButton(
-              onPressed: () => onPress(context, app.id),
-              child: Text("Create contour"))
+          AccentButton(
+              onPress: () => onPress(context, app.id), label: "Add contour"),
         ],
       ),
       color: Colors.white,
     );
   }
 }
+
+

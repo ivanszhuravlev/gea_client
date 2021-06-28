@@ -29,4 +29,10 @@ class ApplicationClient {
     appInfo.contour.add(contour);
     return await _client.update(appInfo);
   }
+
+  Future<AppInfo> updateApp({required AppInfo appInfo}) async {
+    // appInfo.contour.clear();
+    // appInfo.contour.acontour;
+    return await _client.update(appInfo);
+  }
 }

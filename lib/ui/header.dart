@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gea/constants/app_colors.dart';
 import 'package:gea/screens/add_app_screen.dart';
-import 'package:gea/ui/button_simple.dart';
+import 'package:gea/ui/buttons/button_simple.dart';
 
 class Header extends StatelessWidget {
   @override

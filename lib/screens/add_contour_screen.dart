@@ -14,10 +14,6 @@ class AddContourScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var contourModel = Provider.of<CreateContourModel>(context, listen: false);
-
-    contourModel.addApp(appId);
-
     return Container(
       alignment: Alignment.center,
       child: Padding(
@@ -38,7 +34,7 @@ class AddContourScreen extends StatelessWidget {
                   ),
                 ),
                 ChangeNotifierProvider<CreateContourModel>(
-                  create: (context) => CreateContourModel(),
+                  create: (context) => CreateContourModel(appId: appId),
                   child: AddContourForm(),
                 ),
               ],

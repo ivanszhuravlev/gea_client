@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gea/api/application.dart';
 import 'package:gea/api/environment.dart';
 import 'package:gea/api/project.dart';
 import 'package:gea/protos/applications/applications.v1.pb.dart';
@@ -8,6 +9,7 @@ import 'package:gea/protos/projects/projects.v1.pb.dart';
 class AppScreenModel extends ChangeNotifier {
   final ProjectClient projectClient = ProjectClient();
   final EnvironmentClient envClient = EnvironmentClient();
+  final ApplicationClient appClient = ApplicationClient();
 
   final AppInfo app;
   Map<String, List<ServiceInfo>> _services = Map();
@@ -17,12 +19,11 @@ class AppScreenModel extends ChangeNotifier {
   }
 
   Map<String, List<ServiceInfo>> get services => _services;
-  
+
   init() async {
     app.contour.forEach((_contour) async {
-      List<ServiceInfo> _servicesList = await Future.wait(
-          _contour.service.map(_getServiceInfo).toList());
-
+      List<ServiceInfo> _servicesList =
+          await Future.wait(_contour.service.map(_getServiceInfo).toList());
 
       _services[_contour.name] = _servicesList;
       notifyListeners();
@@ -34,6 +35,21 @@ class AppScreenModel extends ChangeNotifier {
     final env = await envClient.get(service.project, service.environment);
 
     return ServiceInfo(project: project, env: env);
+  }
+
+  Future<void> deleteService(Contour contour, ServiceInfo service) async {
+    int foundIndex =
+        app.contour.indexWhere((item) => item.name == contour.name);
+
+    if (foundIndex < 0) {
+      return;
+    }
+
+    app.contour[foundIndex].service.removeWhere((e) =>
+        e.project == service.project.id && e.environment == service.env.id);
+
+    await appClient.updateApp(appInfo: app);
+    notifyListeners();
   }
 }
 

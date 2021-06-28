@@ -15,13 +15,13 @@ class CreateContourModel extends ChangeNotifier {
 
   final TextEditingController contourName = TextEditingController();
 
-  String? _appId;
+  final String appId;
 
   final _random = Random();
 
   List<String> _keys = [];
 
-  CreateContourModel() {
+  CreateContourModel({required this.appId}) {
     final newKey = _random.nextInt(1000).toString();
     _keys.add(newKey);
 
@@ -33,7 +33,6 @@ class CreateContourModel extends ChangeNotifier {
   }
 
   List<String> get keys => this._keys;
-  String? get appId => this._appId;
 
   Map<String, ProjectInfo?> _chosenProjects = Map();
   Map<String, EnvironmentInfo?> _chosenEnvs = Map();
@@ -55,10 +54,6 @@ class CreateContourModel extends ChangeNotifier {
     projectNames.forEach((key, value) => value.dispose());
     envNames.forEach((key, value) => value.dispose());
     super.dispose();
-  }
-
-  void addApp(String appId) {
-    this._appId = appId;
   }
 
   void init() {
