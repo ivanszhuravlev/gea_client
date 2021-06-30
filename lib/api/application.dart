@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:gea/protos/applications/applications.v1.pbgrpc.dart';
 import 'package:gea/protos/common/common.pb.dart';
-// import 'package:gea/types/application.dart';
 import 'package:grpc/grpc_web.dart';
 
 class ApplicationClient {

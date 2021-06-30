@@ -6,14 +6,17 @@ import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:gea/ui/heading.dart';
 
 class AppTable extends StatelessWidget {
-  final List<ServiceInfo>? serviceInfos;
-  final ServiceCallback onDelete;
+  final List<ServiceInfo> serviceInfos;
+  final OnDelete onDelete;
   final Contour contour;
+  final OnChoose onChoose;
 
-  AppTable(
-      {required this.contour,
-      required this.serviceInfos,
-      required this.onDelete});
+  AppTable({
+    required this.contour,
+    required this.serviceInfos,
+    required this.onDelete,
+    required this.onChoose,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -47,33 +50,42 @@ class AppTable extends StatelessWidget {
             SizedBox(width: 40)
           ],
         ),
-        ...serviceInfos
-                ?.map(
-                  (service) => TableRow(
-                    children: <Widget>[
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                        child: Text(service.project.name,
-                            textAlign: TextAlign.center),
-                      ),
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                        child:
-                            Text(service.env.name, textAlign: TextAlign.center),
-                      ),
-                      DeleteButton(
-                        onPressed: () => onDelete(
-                            context: context,
-                            contour: contour,
-                            service: service),
-                      )
-                    ],
+        ...serviceInfos.asMap().entries.map(
+          (entry) {
+            final int index = entry.key;
+            final ServiceInfo service = entry.value;
+
+            return TableRow(
+              children: <Widget>[
+                GestureDetector(
+                    onTap: () => onChoose(
+                        context: context,
+                        contourName: contour.name,
+                        index: index),
+                    child: Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                      child: Text(service.project.name,
+                          textAlign: TextAlign.center),
+                    )),
+                GestureDetector(
+                  onTap: () => onChoose(
+                      context: context,
+                      contourName: contour.name,
+                      index: index),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                    child: Text(service.env.name, textAlign: TextAlign.center),
                   ),
+                ),
+                DeleteButton(
+                  onPressed: () => onDelete(
+                      context: context, contour: contour, service: service),
                 )
-                .toList() ??
-            [],
+              ],
+            );
+          },
+        ).toList(),
       ],
     );
   }
@@ -100,8 +112,14 @@ class DeleteButton extends StatelessWidget {
   }
 }
 
-typedef void ServiceCallback({
+typedef void OnDelete({
   required BuildContext context,
   required Contour contour,
   required ServiceInfo service,
+});
+
+typedef void OnChoose({
+  required BuildContext context,
+  required String contourName,
+  required int index,
 });

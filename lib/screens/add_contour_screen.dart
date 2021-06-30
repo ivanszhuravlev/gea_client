@@ -14,32 +14,34 @@ class AddContourScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Padding(
-          padding: EdgeInsets.all(12.0),
-          child: SizedBox(
-            width: 500.0,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Heading(text: "Add new contour"),
-                Padding(
-                  padding: EdgeInsets.only(top: 6, bottom: 12),
-                  child: Text(
-                    "It will represent an 'environment' and include several projects",
-                    style: TextStyle(
-                        color: AppColors.darkCaption,
-                        fontSize: FontSizes.caption),
+    return SingleChildScrollView(
+      child: Container(
+        alignment: Alignment.center,
+        child: Padding(
+            padding: EdgeInsets.all(12.0),
+            child: SizedBox(
+              width: 500.0,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Heading(text: "Add new contour"),
+                  Padding(
+                    padding: EdgeInsets.only(top: 6, bottom: 12),
+                    child: Text(
+                      "It will represent an 'environment' and include several projects",
+                      style: TextStyle(
+                          color: AppColors.darkCaption,
+                          fontSize: FontSizes.caption),
+                    ),
                   ),
-                ),
-                ChangeNotifierProvider<CreateContourModel>(
-                  create: (context) => CreateContourModel(appId: appId),
-                  child: AddContourForm(),
-                ),
-              ],
-            ),
-          )),
+                  ChangeNotifierProvider<CreateContourModel>(
+                    create: (context) => CreateContourModel(appId: appId),
+                    child: AddContourForm(),
+                  ),
+                ],
+              ),
+            )),
+      ),
     );
   }
 }

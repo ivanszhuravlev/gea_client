@@ -7,6 +7,7 @@ import 'package:gea/screens/app_screen.dart';
 import 'package:gea/screens/home_screen.dart';
 import 'package:collection/collection.dart';
 import 'package:gea/ui/header.dart';
+import 'package:gea/ui/vertical_divider.dart';
 
 class RootNavigator extends StatelessWidget {
   @override
@@ -40,18 +41,12 @@ class RootNavigator extends StatelessWidget {
                   body: Row(
                     children: [
                       Sidebar(),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: 0.0, top: 12.0, right: 0.0, bottom: 12.0),
-                        child: VerticalDivider(color: AppColors.border),
-                      ),
+                      GlobalDivider(verticalOffset: 12),
                       Expanded(
                         child: SizedBox.expand(
                           child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 32, vertical: 24),
-                            child: SingleChildScrollView(
-                              child: matchedPath.builder(context, match),
-                            ),
+                            child: matchedPath.builder(context, match),
                           ),
                         ),
                       ),

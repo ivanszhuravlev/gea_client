@@ -13,12 +13,22 @@ class AppScreenModel extends ChangeNotifier {
 
   final AppInfo app;
   Map<String, List<ServiceInfo>> _services = Map();
+  _ChosenService? _chosenService;
 
   AppScreenModel({required this.app}) {
     init();
   }
 
   Map<String, List<ServiceInfo>> get services => _services;
+  ServiceInfo? get chosenService {
+    if (_chosenService == null) {
+      return null;
+    }
+    var _list = _services[_chosenService!.contourName];
+
+    return _list?[_chosenService!.index];
+  }
+  // ServiceInfo? get chosenService => chosenService != nul ? _services[chosenService!] : null
 
   init() async {
     app.contour.forEach((_contour) async {
@@ -51,6 +61,12 @@ class AppScreenModel extends ChangeNotifier {
     await appClient.updateApp(appInfo: app);
     notifyListeners();
   }
+
+  void chooseService(String contourName, int index) {
+    _chosenService = _ChosenService(contourName: contourName, index: index);
+    print("CHOOSE" + contourName + '-' + index.toString());
+    notifyListeners();
+  }
 }
 
 class ServiceInfo {
@@ -58,4 +74,11 @@ class ServiceInfo {
   final EnvironmentInfo env;
 
   ServiceInfo({required this.project, required this.env});
+}
+
+class _ChosenService {
+  final String contourName;
+  final int index;
+
+  _ChosenService({required this.contourName, required this.index});
 }
