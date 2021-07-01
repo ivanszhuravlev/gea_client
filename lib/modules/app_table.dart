@@ -65,8 +65,11 @@ class AppTable extends StatelessWidget {
                     child: Padding(
                       padding:
                           EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                      child: Text(service.project.name,
-                          textAlign: TextAlign.center),
+                      child: Text(
+                        service.project.name,
+                        textAlign: TextAlign.center,
+                        // maxLines: 1,
+                      ),
                     )),
                 GestureDetector(
                   onTap: () => onChoose(
@@ -75,7 +78,11 @@ class AppTable extends StatelessWidget {
                       index: index),
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                    child: Text(service.env.name, textAlign: TextAlign.center),
+                    child: Text(
+                      service.env.name,
+                      textAlign: TextAlign.center,
+                      // maxLines: 1,
+                    ),
                   ),
                 ),
                 DeleteButton(

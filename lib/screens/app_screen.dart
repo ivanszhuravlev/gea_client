@@ -159,7 +159,7 @@ class ServiceDetails extends StatelessWidget {
                               text: key,
                               fontSize: FontSizes.h5,
                             ),
-                            Text(value.toString())
+                            SelectableText(value.toString())
                           ],
                         ),
                       );
