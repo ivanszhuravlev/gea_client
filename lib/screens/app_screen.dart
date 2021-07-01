@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gea/constants/app_colors.dart';
 import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/fonts.dart';
 import 'package:gea/models/view_models/app_screen_model.dart';
@@ -92,7 +93,7 @@ class _AppScreenContent extends StatelessWidget {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Heading(fontSize: FontSizes.h4, text: contour.name),
+                          ContourName(name: contour.name),
                           Padding(
                             padding: EdgeInsets.only(bottom: 32, top: 12),
                             child: service != null
@@ -164,13 +165,15 @@ class ServiceDetails extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 24,),
+                  SizedBox(
+                    height: 24,
+                  ),
                   Heading(
                     text: "Environment",
                     fontSize: FontSizes.h4,
                   ),
                   ...service!.env.info_.byIndex.asMap().entries.map(
-                        (entry) {
+                    (entry) {
                       var key = entry.value.toString();
                       var value = service!.env.getField(entry.key + 1);
 
@@ -183,7 +186,7 @@ class ServiceDetails extends StatelessWidget {
                               text: key,
                               fontSize: FontSizes.h5,
                             ),
-                            Text(value.toString())
+                            SelectableText(value.toString())
                           ],
                         ),
                       );
@@ -193,6 +196,71 @@ class ServiceDetails extends StatelessWidget {
               ),
             )
           : SizedBox(),
+    );
+  }
+}
+
+class ContourName extends StatefulWidget {
+  final String name;
+
+  ContourName({required this.name});
+
+  @override
+  _ContourNameState createState() {
+    return _ContourNameState();
+  }
+}
+
+class _ContourNameState extends State<ContourName> {
+  final inputController = TextEditingController();
+  bool isEditing = false;
+
+  @override
+  void dispose() {
+    inputController.dispose();
+    super.dispose();
+  }
+
+  onPress() {
+    setState(() {
+      isEditing = !isEditing;
+      if (!isEditing) {
+        inputController.value = TextEditingValue(text: widget.name);
+      }
+    });
+  }
+
+  onSubmit(BuildContext context) async {
+    await Provider.of<AppScreenModel>(context, listen: false).renameContour(widget.name, inputController.text);
+    setState(() {
+      isEditing = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    inputController.value = TextEditingValue(text: widget.name);
+
+    return GestureDetector(
+      onTap: onPress,
+      child: isEditing
+          ? Row(children: [
+              SizedBox(
+                  width: 200,
+                  child: TextFormField(controller: inputController)),
+              Container(
+                width: 40,
+                child: IconButton(
+                  onPressed: () => onSubmit(context),
+                  icon: Icon(Icons.check),
+                  iconSize: 20,
+                  hoverColor: AppColors.darkContrast,
+                  splashColor: AppColors.darkContrast,
+                  splashRadius: 20,
+                ),
+              )
+            ])
+          : Heading(fontSize: FontSizes.h4, text: widget.name),
     );
   }
 }

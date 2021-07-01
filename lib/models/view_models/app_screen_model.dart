@@ -28,7 +28,6 @@ class AppScreenModel extends ChangeNotifier {
 
     return _list?[_chosenService!.index];
   }
-  // ServiceInfo? get chosenService => chosenService != nul ? _services[chosenService!] : null
 
   init() async {
     app.contour.forEach((_contour) async {
@@ -47,16 +46,21 @@ class AppScreenModel extends ChangeNotifier {
     return ServiceInfo(project: project, env: env);
   }
 
+  int _getContourIndex(String name) {
+    return app.contour.indexWhere((item) => item.name == name);
+  }
+
   Future<void> deleteService(Contour contour, ServiceInfo service) async {
-    int foundIndex =
-        app.contour.indexWhere((item) => item.name == contour.name);
+    int foundIndex = _getContourIndex(contour.name);
 
     if (foundIndex < 0) {
-      return;
+      return null;
     }
-
     app.contour[foundIndex].service.removeWhere((e) =>
         e.project == service.project.id && e.environment == service.env.id);
+
+    _services[contour.name]!.removeWhere((e) =>
+        e.project.id == service.project.id && e.env.id == service.env.id);
 
     await appClient.updateApp(appInfo: app);
     notifyListeners();
@@ -64,7 +68,21 @@ class AppScreenModel extends ChangeNotifier {
 
   void chooseService(String contourName, int index) {
     _chosenService = _ChosenService(contourName: contourName, index: index);
-    print("CHOOSE" + contourName + '-' + index.toString());
+    notifyListeners();
+  }
+
+  Future<void> renameContour(String oldName, String newName) async {
+    int index = _getContourIndex(oldName);
+
+    if (index < 0) {
+      return null;
+    }
+
+    app.contour[index].name = newName;
+    _services[newName] = _services[oldName]!;
+    _services.remove(oldName);
+
+    await appClient.updateApp(appInfo: app);
     notifyListeners();
   }
 }
