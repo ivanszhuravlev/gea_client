@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gea/api/environment.dart';
 import 'package:gea/api/project.dart';
 import 'package:collection/collection.dart';
+import 'package:gea/models/view_models/app_screen_model.dart';
 import 'package:gea/protos/applications/applications.v1.pbgrpc.dart';
 import 'package:gea/protos/environments/environments.v1.pb.dart';
 import 'package:gea/protos/projects/projects.v1.pbgrpc.dart';
@@ -117,16 +118,42 @@ class CreateContourModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Contour submit() {
-    Iterable<Service> services =  _chosenProjects.entries.map((entry) {
-      final key = entry.key;
-      final project = entry.value;
+  ServiceInfo? _getServiceInfo(MapEntry<String, ProjectInfo?> entry) {
+    final key = entry.key;
+    final project = entry.value;
 
-      final env = _chosenEnvs[key];
+    final env = _chosenEnvs[key];
+    
+    if (project != null && env != null) {
+      return ServiceInfo(project: project, env: env);
+    } else {
+      return null;
+    }
+  }
 
-      return Service(project: project?.id, environment: env?.id);
+  Iterable<Service> _getServices() {
+    return _chosenProjects.entries.map((entry) {
+      var info = _getServiceInfo(entry);
+
+      if (info == null) {
+        throw Error();
+      }
+
+      return Service(project: info.project.id, environment: info.env.id);
     });
+  }
 
-    return Contour(name: contourName.text, service: services);
+  Contour? getReadyContour() {
+    try {
+      return Contour(name: contourName.text, service: _getServices());
+    } catch (error) {
+      return null;
+    }
+  }
+
+  List<ServiceInfo?> getServiceInfos() {
+    return _chosenProjects.entries.map((entry) {
+      return _getServiceInfo(entry);
+    }).toList();
   }
 }

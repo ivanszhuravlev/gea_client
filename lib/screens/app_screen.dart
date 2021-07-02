@@ -3,7 +3,10 @@ import 'package:gea/constants/app_colors.dart';
 import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/fonts.dart';
 import 'package:gea/models/view_models/app_screen_model.dart';
+import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/modules/app_table.dart';
+import 'package:gea/modules/modal_add_service.dart';
+import 'package:gea/ui/buttons/button.dart';
 import 'package:gea/ui/sidebar_right.dart';
 import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:gea/screens/add_contour_screen.dart';
@@ -66,6 +69,25 @@ class _AppScreenContent extends StatelessWidget {
         .chooseService(contourName, index);
   }
 
+  onShowServiceForm(BuildContext context, Contour contour, String appId) {
+    var model = Provider.of<AppScreenModel>(context, listen: false);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return ChangeNotifierProvider<CreateContourModel>(
+          create: (context) => CreateContourModel(appId: appId),
+          child: ModalAddService(
+            contour: contour,
+            onSubmit: (ServiceInfo service) {
+              model.addService(service, contour);
+            },
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final model = context.watch<AppScreenModel>();
@@ -90,23 +112,35 @@ class _AppScreenContent extends StatelessWidget {
                   children: app.contour.map(
                     (contour) {
                       final service = services[contour.name];
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ContourName(name: contour.name),
-                          Padding(
-                            padding: EdgeInsets.only(bottom: 32, top: 12),
-                            child: service != null
-                                ? AppTable(
+                      return service != null
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ContourName(name: contour.name),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 6, top: 12),
+                                  child: AppTable(
                                     contour: contour,
                                     serviceInfos: service,
                                     onDelete: onDeleteService,
                                     onChoose: onChoose,
-                                  )
-                                : Text("Loading"),
-                          ),
-                        ],
-                      );
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(bottom: 32),
+                                  child: Button(
+                                    onPress: () =>
+                                        onShowServiceForm(context, contour, app.id),
+                                    child: Icon(
+                                      Icons.add,
+                                      color: AppColors.textLight,
+                                      size: 20,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Text("Loading");
                     },
                   ).toList(),
                 ),
@@ -120,82 +154,82 @@ class _AppScreenContent extends StatelessWidget {
         ),
         Spacer(),
         GlobalDivider(),
-        ServiceDetails(
-          service: model.chosenService,
-        )
+        SidebarRight(
+          child: model.chosenService != null
+              ? ServiceDetails(
+                  service: model.chosenService!,
+                )
+              : SizedBox(),
+        ),
       ],
     );
   }
 }
 
 class ServiceDetails extends StatelessWidget {
-  final ServiceInfo? service;
+  final ServiceInfo service;
 
   ServiceDetails({required this.service});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: service != null
-          ? SidebarRight(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Heading(
-                    text: "Project",
-                    fontSize: FontSizes.h4,
-                  ),
-                  ...service!.project.info_.byIndex.asMap().entries.map(
-                    (entry) {
-                      var key = entry.value.toString();
-                      var value = service!.project.getField(entry.key + 1);
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Heading(
+            text: "Project",
+            fontSize: FontSizes.h4,
+          ),
+          ...service.project.info_.byIndex.asMap().entries.map(
+            (entry) {
+              var key = entry.value.toString();
+              var value = service.project.getField(entry.key + 1);
 
-                      return Padding(
-                        padding: EdgeInsets.only(top: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Heading(
-                              text: key,
-                              fontSize: FontSizes.h5,
-                            ),
-                            SelectableText(value.toString())
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  Heading(
-                    text: "Environment",
-                    fontSize: FontSizes.h4,
-                  ),
-                  ...service!.env.info_.byIndex.asMap().entries.map(
-                    (entry) {
-                      var key = entry.value.toString();
-                      var value = service!.env.getField(entry.key + 1);
+              return Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Heading(
+                      text: key,
+                      fontSize: FontSizes.h5,
+                    ),
+                    SelectableText(value.toString())
+                  ],
+                ),
+              );
+            },
+          ),
+          SizedBox(
+            height: 24,
+          ),
+          Heading(
+            text: "Environment",
+            fontSize: FontSizes.h4,
+          ),
+          ...service.env.info_.byIndex.asMap().entries.map(
+            (entry) {
+              var key = entry.value.toString();
+              var value = service.env.getField(entry.key + 1);
 
-                      return Padding(
-                        padding: EdgeInsets.only(top: 12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Heading(
-                              text: key,
-                              fontSize: FontSizes.h5,
-                            ),
-                            SelectableText(value.toString())
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-            )
-          : SizedBox(),
+              return Padding(
+                padding: EdgeInsets.only(top: 12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Heading(
+                      text: key,
+                      fontSize: FontSizes.h5,
+                    ),
+                    SelectableText(value.toString())
+                  ],
+                ),
+              );
+            },
+          ),
+        ],
+      ),
     );
   }
 }
@@ -231,7 +265,8 @@ class _ContourNameState extends State<ContourName> {
   }
 
   onSubmit(BuildContext context) async {
-    await Provider.of<AppScreenModel>(context, listen: false).renameContour(widget.name, inputController.text);
+    await Provider.of<AppScreenModel>(context, listen: false)
+        .renameContour(widget.name, inputController.text);
     setState(() {
       isEditing = false;
     });

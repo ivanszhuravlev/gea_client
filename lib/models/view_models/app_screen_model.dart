@@ -71,6 +71,22 @@ class AppScreenModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void addService(ServiceInfo service, Contour contour) async {
+    int foundIndex = _getContourIndex(contour.name);
+
+    if (foundIndex < 0) {
+      return null;
+    }
+
+    app.contour[foundIndex].service
+        .add(Service(project: service.project.id, environment: service.env.id));
+
+    _services[contour.name]!.add(service);
+
+    await appClient.updateApp(appInfo: app);
+    notifyListeners();
+  }
+
   Future<void> renameContour(String oldName, String newName) async {
     int index = _getContourIndex(oldName);
 

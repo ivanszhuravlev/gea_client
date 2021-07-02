@@ -20,74 +20,56 @@ class AppTable extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Table(
-      columnWidths: const <int, TableColumnWidth>{
-        0: IntrinsicColumnWidth(),
-        1: IntrinsicColumnWidth(),
-        2: FixedColumnWidth(50),
-      },
-      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-      children: [
-        TableRow(
-          decoration: BoxDecoration(
-              color: AppColors.accentLighter,
-              borderRadius: BorderRadius.all(Radius.circular(8))),
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-              child: Heading(
-                  fontSize: FontSizes.h5,
-                  text: 'Project',
-                  textAlign: TextAlign.center),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-              child: Heading(
-                  fontSize: FontSizes.h5,
-                  text: 'Environment',
-                  textAlign: TextAlign.center),
-            ),
-            SizedBox(width: 40)
-          ],
+    return DataTable(
+      columns: [
+        DataColumn(
+          label: Heading(
+              fontSize: FontSizes.h5,
+              text: 'Project',
+              textAlign: TextAlign.center),
         ),
+        DataColumn(
+          label: Heading(
+              fontSize: FontSizes.h5,
+              text: 'Environment',
+              textAlign: TextAlign.center),
+        ),
+        DataColumn(
+            label: SizedBox(width: 40),
+        ),
+      ],
+      rows: [
         ...serviceInfos.asMap().entries.map(
           (entry) {
             final int index = entry.key;
             final ServiceInfo service = entry.value;
 
-            return TableRow(
-              children: <Widget>[
-                GestureDetector(
-                    onTap: () => onChoose(
-                        context: context,
-                        contourName: contour.name,
-                        index: index),
-                    child: Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                      child: Text(
-                        service.project.name,
-                        textAlign: TextAlign.center,
-                        // maxLines: 1,
-                      ),
-                    )),
-                GestureDetector(
+            return DataRow(
+              cells: <DataCell>[
+                DataCell(
+                  Text(service.project.name),
                   onTap: () => onChoose(
-                      context: context,
-                      contourName: contour.name,
-                      index: index),
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                    child: Text(
-                      service.env.name,
-                      textAlign: TextAlign.center,
-                      // maxLines: 1,
-                    ),
+                    context: context,
+                    contourName: contour.name,
+                    index: index,
                   ),
                 ),
-                DeleteButton(
-                  onPressed: () => onDelete(
-                      context: context, contour: contour, service: service),
+                DataCell(
+                  Text(service.env.name),
+                  onTap: () => onChoose(
+                    context: context,
+                    contourName: contour.name,
+                    index: index,
+                  ),
+                ),
+                DataCell(
+                  DeleteButton(
+                    onPressed: () => onDelete(
+                      context: context,
+                      contour: contour,
+                      service: service,
+                    ),
+                  ),
                 )
               ],
             );
@@ -111,8 +93,8 @@ class DeleteButton extends StatelessWidget {
         onPressed: onPressed,
         icon: Icon(Icons.delete),
         iconSize: 20,
-        hoverColor: AppColors.darkContrast,
-        splashColor: AppColors.darkContrast,
+        hoverColor: AppColors.textLight,
+        splashColor: AppColors.border,
         splashRadius: 20,
       ),
     );

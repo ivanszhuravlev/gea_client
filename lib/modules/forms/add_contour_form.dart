@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/view_models/create_contour_model.dart';
@@ -100,11 +98,17 @@ class _FormState extends State<AddContourForm> {
           ElevatedButton(
               onPressed: () {
                 if (widget._formKey.currentState!.validate()) {
-                  appModel.addContour(contourModel.appId, contourModel.submit());
-                  Navigator.of(context).pop();
+                  var contour = contourModel.getReadyContour();
+
+                  if (contour != null) {
+                    appModel.addContour(
+                        contourModel.appId, contour);
+                    Navigator.of(context).pop();
+                  }
                 }
               },
-              child: Text("Create"))
+              child: Text("Create"),
+          )
         ],
       ),
     );
@@ -112,15 +116,12 @@ class _FormState extends State<AddContourForm> {
 }
 
 class ContourRow extends StatelessWidget {
-  final _debounce = Debounce(delay: Duration(milliseconds: 0));
   final String rowKey;
 
   ContourRow({required this.rowKey}) : super(key: Key(rowKey));
 
   @override
   Widget build(BuildContext context) {
-    var model = Provider.of<CreateContourModel>(context, listen: true);
-
     return Column(
       children: [
         Row(
@@ -132,73 +133,99 @@ class ContourRow extends StatelessWidget {
               padding: EdgeInsets.only(right: 12),
               child: SizedBox(
                 width: 244,
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        labelText: "Project name",
-                      ),
-                      key: Key("project_name" + rowKey),
-                      controller: model.projectNames[rowKey],
-                      validator: _validator,
-                      onChanged: (value) {
-                        _debounce.run(() {
-                          model.listProjects(value, rowKey);
-                        });
-                      },
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 12),
-                      child: _ProjectsDropdown(
-                        rowKey: rowKey,
-                        onChosen: (String name) {
-                          print(rowKey);
-                          print(model.projectNames);
-                          print(TextEditingValue(text: name));
-
-                          model.projectNames[rowKey]?.value =
-                              TextEditingValue(text: name);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+                child: ProjectChooseField(rowKey: rowKey),
               ),
             ),
             SizedBox(
               width: 244,
-              child: Column(
-                // clipBehavior: Clip.none,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextFormField(
-                    enabled: model.chosenProjects[rowKey] != null,
-                    decoration: InputDecoration(
-                      labelText: "Environment name",
-                    ),
-                    key: Key("env_name" + rowKey),
-                    controller: model.envNames[rowKey],
-                    validator: _validator,
-                    onChanged: (value) {
-                      _debounce.run(() {
-                        model.listEnvs(value, rowKey);
-                      });
-                    },
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 12),
-                    child: _EnvsDropdown(
-                      rowKey: rowKey,
-                      onChosen: (String name) {
-                        model.envNames[rowKey]?.value =
-                            TextEditingValue(text: name);
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              child: EnvChooseField(rowKey: rowKey),
             ),
           ],
+        ),
+      ],
+    );
+  }
+}
+
+class ProjectChooseField extends StatelessWidget {
+  final String rowKey;
+  final _debounce = Debounce(delay: Duration(milliseconds: 0));
+
+  ProjectChooseField({required this.rowKey});
+
+  @override
+  Widget build(BuildContext context) {
+    var model = Provider.of<CreateContourModel>(context, listen: true);
+
+    return Column(
+      children: [
+        TextFormField(
+          decoration: InputDecoration(
+            labelText: "Project name",
+          ),
+          key: Key("project_name" + rowKey),
+          controller: model.projectNames[rowKey],
+          validator: _validator,
+          onChanged: (value) {
+            _debounce.run(() {
+              model.listProjects(value, rowKey);
+            });
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 12),
+          child: _ProjectsDropdown(
+            rowKey: rowKey,
+            onChosen: (String name) {
+              print(rowKey);
+              print(model.projectNames);
+              print(TextEditingValue(text: name));
+
+              model.projectNames[rowKey]?.value = TextEditingValue(text: name);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class EnvChooseField extends StatelessWidget {
+  final String rowKey;
+  final _debounce = Debounce(delay: Duration(milliseconds: 0));
+
+  EnvChooseField({required this.rowKey});
+
+  @override
+  Widget build(BuildContext context) {
+    var model = Provider.of<CreateContourModel>(context, listen: true);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          enabled: model.chosenProjects[rowKey] != null,
+          decoration: InputDecoration(
+            labelText: "Environment name",
+          ),
+          key: Key("env_name" + rowKey),
+          controller: model.envNames[rowKey],
+          validator: _validator,
+          onChanged: (value) {
+            _debounce.run(() {
+              model.listEnvs(value, rowKey);
+            });
+          },
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 12),
+          child: _EnvsDropdown(
+            rowKey: rowKey,
+            onChosen: (String name) {
+              model.envNames[rowKey]?.value =
+                  TextEditingValue(text: name);
+            },
+          ),
         ),
       ],
     );

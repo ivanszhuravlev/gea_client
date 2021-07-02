@@ -30,7 +30,7 @@ class SimpleButton extends StatelessWidget {
         ),
       ),
       constraints: const BoxConstraints(minWidth: 0.0, minHeight: 0.0),
-      visualDensity: VisualDensity.compact,
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       onPressed: onPress!,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(8.0))),
