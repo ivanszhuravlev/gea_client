@@ -1,13 +1,15 @@
 import 'package:gea/protos/projects/projects.v1.pbgrpc.dart';
+import 'package:gea/services/env.dart';
 import 'package:grpc/grpc_web.dart';
 import 'package:fixnum/fixnum.dart';
 
 class ProjectClient {
   late final ProjectsClient _client;
+  final env = Env();
 
   ProjectClient() {
     final channel =
-        GrpcWebClientChannel.xhr(Uri.parse('http://localhost:8080'));
+        GrpcWebClientChannel.xhr(Uri.parse(env.apiHost));
 
     _client = new ProjectsClient(channel);
   }
