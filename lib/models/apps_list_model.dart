@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:gea/api/application.dart';
 import 'package:gea/api/project.dart';
 import 'package:gea/protos/applications/applications.v1.pb.dart';
@@ -15,10 +16,11 @@ class AppsListModel extends ChangeNotifier {
 
   List<AppInfo> get apps => this._apps;
 
-  void create(String name) async{
+  Future<String> create(String name) async{
     var newApp = await client.create(name);
     _apps.add(newApp);
     notifyListeners();
+    return newApp.id;
   }
 
   void list() async{

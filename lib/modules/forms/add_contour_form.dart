@@ -3,6 +3,7 @@ import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/protos/environments/environments.v1.pb.dart';
 import 'package:gea/protos/projects/projects.v1.pb.dart';
+import 'package:gea/screens/app_screen.dart';
 import 'package:gea/ui/buttons/button_icon_text.dart';
 import 'package:gea/ui/buttons/button_simple.dart';
 import 'package:gea/ui/text_separator.dart';
@@ -103,7 +104,7 @@ class _FormState extends State<AddContourForm> {
                   if (contour != null) {
                     appModel.addContour(
                         contourModel.appId, contour);
-                    Navigator.of(context).pop();
+                    Navigator.of(context).pushNamed('${AppScreen.route}/${contourModel.appId}');
                   }
                 }
               },

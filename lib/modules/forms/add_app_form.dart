@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gea/models/apps_list_model.dart';
+import 'package:gea/screens/app_screen.dart';
 import 'package:gea/utils/form_generator.dart';
 import 'package:provider/provider.dart';
 
@@ -23,8 +24,9 @@ class AddAppForm extends StatelessWidget {
                 return null;
               }),
         ],
-        onSubmit: (List<FormValue> values) {
-          model.create(values.elementAt(0).value);
+        onSubmit: (List<FormValue> values) async{
+          var appId = await model.create(values.elementAt(0).value);
+          Navigator.of(context).pushNamed('${AppScreen.route}/$appId');
         },
         labelSubmit: "Create app");
   }
