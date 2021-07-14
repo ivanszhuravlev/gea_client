@@ -4,13 +4,14 @@ import 'package:gea/constants/app_colors.dart';
 class Button extends StatelessWidget {
   final Widget child;
   final void Function() onPress;
+  final Color? backgroundColor;
 
-  Button({required this.child, required this.onPress});
+  Button({required this.child, required this.onPress, this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
     return RawMaterialButton(
-      fillColor: AppColors.accentLight,
+      fillColor: backgroundColor ?? AppColors.accentLight,
       clipBehavior: Clip.hardEdge,
       elevation: 0,
       hoverElevation: 0,

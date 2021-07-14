@@ -4,10 +4,10 @@ import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/fonts.dart';
 import 'package:gea/models/view_models/app_screen_model.dart';
 import 'package:gea/models/view_models/create_contour_model.dart';
+import 'package:gea/modules/app_screen/service_details.dart';
 import 'package:gea/modules/app_table.dart';
 import 'package:gea/modules/modal_add_service.dart';
 import 'package:gea/ui/buttons/button.dart';
-import 'package:gea/ui/sidebar_right.dart';
 import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:gea/screens/add_contour_screen.dart';
 import 'package:gea/ui/buttons/accent_button.dart';
@@ -129,8 +129,8 @@ class _AppScreenContent extends StatelessWidget {
                                 Padding(
                                   padding: EdgeInsets.only(bottom: 32),
                                   child: Button(
-                                    onPress: () =>
-                                        onShowServiceForm(context, contour, app.id),
+                                    onPress: () => onShowServiceForm(
+                                        context, contour, app.id),
                                     child: Icon(
                                       Icons.add,
                                       color: AppColors.textLight,
@@ -154,82 +154,11 @@ class _AppScreenContent extends StatelessWidget {
         ),
         Spacer(),
         GlobalDivider(),
-        SidebarRight(
-          child: model.chosenService != null
-              ? ServiceDetails(
-                  service: model.chosenService!,
-                )
-              : SizedBox(),
-        ),
+        ServiceDetails(
+          service: model.chosenService,
+          onClose: model.closeChosenService,
+        )
       ],
-    );
-  }
-}
-
-class ServiceDetails extends StatelessWidget {
-  final ServiceInfo service;
-
-  ServiceDetails({required this.service});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Heading(
-            text: "Project",
-            fontSize: FontSizes.h4,
-          ),
-          ...service.project.info_.byIndex.asMap().entries.map(
-            (entry) {
-              var key = entry.value.toString();
-              var value = service.project.getField(entry.key + 1);
-
-              return Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Heading(
-                      text: key,
-                      fontSize: FontSizes.h5,
-                    ),
-                    SelectableText(value.toString())
-                  ],
-                ),
-              );
-            },
-          ),
-          SizedBox(
-            height: 24,
-          ),
-          Heading(
-            text: "Environment",
-            fontSize: FontSizes.h4,
-          ),
-          ...service.env.info_.byIndex.asMap().entries.map(
-            (entry) {
-              var key = entry.value.toString();
-              var value = service.env.getField(entry.key + 1);
-
-              return Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Heading(
-                      text: key,
-                      fontSize: FontSizes.h5,
-                    ),
-                    SelectableText(value.toString())
-                  ],
-                ),
-              );
-            },
-          ),
-        ],
-      ),
     );
   }
 }

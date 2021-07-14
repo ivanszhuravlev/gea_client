@@ -71,6 +71,11 @@ class AppScreenModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void closeChosenService() {
+    _chosenService = null;
+    notifyListeners();
+  }
+
   void addService(ServiceInfo service, Contour contour) async {
     int foundIndex = _getContourIndex(contour.name);
 
