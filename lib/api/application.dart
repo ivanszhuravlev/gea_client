@@ -1,6 +1,4 @@
-import 'package:gea/protos/applications/applications.v1.pb.dart';
-import 'package:gea/protos/applications/applications.v1.pbgrpc.dart';
-import 'package:gea/protos/common/common.pb.dart';
+import 'package:gea/protos/apps/applications/applications.v1.pbgrpc.dart';
 import 'package:gea/services/env.dart';
 import 'package:grpc/grpc_web.dart';
 
@@ -15,22 +13,21 @@ class ApplicationClient {
     _client = new ApplicationsClient(channel);
   }
 
-  Future<AppInfo> create(String name) async {
-    return await _client.create(AppName()..name = name);
+  Future<AppWithoutContours> create(String name) async {
+    return await _client.create(AppNameAndDescription()..name = name);
   }
 
-  Future<Iterable<AppInfo>> list() async {
+  Future<Iterable<AppWithoutContours>> list() async {
     return await _client
-        .list(EmptyMessage())
+        .list(ListOptions())
         .toList();
   }
 
-  Future<AppInfo> createContour({required AppInfo appInfo, required Contour contour}) async {
-    appInfo.contour.add(contour);
+  Future<AppWithoutContours> updateApp({required AppWithoutContours appInfo}) async {
     return await _client.update(appInfo);
   }
 
-  Future<AppInfo> updateApp({required AppInfo appInfo}) async {
-    return await _client.update(appInfo);
+  Future<AppFullInfo> get(AppWithoutContours app) async {
+    return await _client.get(AppId()..id = app.id);
   }
 }

@@ -7,8 +7,8 @@ import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/modules/app_screen/service_details.dart';
 import 'package:gea/modules/app_table.dart';
 import 'package:gea/modules/modal_add_service.dart';
+import 'package:gea/protos/apps/contours/contours.v1.pb.dart';
 import 'package:gea/ui/buttons/button.dart';
-import 'package:gea/protos/applications/applications.v1.pb.dart';
 import 'package:gea/screens/add_contour_screen.dart';
 import 'package:gea/ui/buttons/accent_button.dart';
 import 'package:gea/ui/heading.dart';
@@ -53,8 +53,8 @@ class _AppScreenContent extends StatelessWidget {
 
   onDeleteService({
     required BuildContext context,
-    required Contour contour,
-    required ServiceInfo service,
+    required ContourInfo contour,
+    required ServiceInfoFull service,
   }) {
     Provider.of<AppScreenModel>(context, listen: false)
         .deleteService(contour, service);
@@ -69,7 +69,7 @@ class _AppScreenContent extends StatelessWidget {
         .chooseService(contourName, index);
   }
 
-  onShowServiceForm(BuildContext context, Contour contour, String appId) {
+  onShowServiceForm(BuildContext context, ContourInfo contour, String appId) {
     var model = Provider.of<AppScreenModel>(context, listen: false);
 
     showDialog(
@@ -79,7 +79,7 @@ class _AppScreenContent extends StatelessWidget {
           create: (context) => CreateContourModel(appId: appId),
           child: ModalAddService(
             contour: contour,
-            onSubmit: (ServiceInfo service) {
+            onSubmit: (ServiceWithoutId service) {
               model.addService(service, contour);
             },
           ),

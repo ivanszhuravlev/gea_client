@@ -1,4 +1,4 @@
-import 'package:gea/protos/environments/environments.v1.pbgrpc.dart';
+import 'package:gea/protos/external/gitlab/environments/environments.v1.pbgrpc.dart';
 import 'package:gea/services/env.dart';
 import 'package:grpc/grpc_web.dart';
 import 'package:fixnum/fixnum.dart';
