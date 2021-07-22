@@ -1,6 +1,0 @@
-[submodule "gitlab-environment-aggregator-proto"]
-	path = gitlab-environment-aggregator-proto
-	url = git@github.com:allanger/gitlab-environment-aggregator-proto.git
-[submodule "proto"]
-	path = proto
-	url = git@github.com:allanger/gitlab-environment-aggregator-proto.git
