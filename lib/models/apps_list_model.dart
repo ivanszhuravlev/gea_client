@@ -14,7 +14,7 @@ class AppsListModel extends ChangeNotifier {
   final ContourClient contourClient = ContourClient();
 
   AppsListModel() {
-    this.list();
+    // this.list();
   }
 
   List<AppWithoutContours> get apps => this._apps;

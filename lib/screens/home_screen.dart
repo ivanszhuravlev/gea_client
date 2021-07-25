@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gea/modules/forms/sign_up_form.dart';
 
 class HomeScreen extends StatelessWidget {
   static const String route = '/';
@@ -7,14 +8,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-          ],
-        ),
+        child: Text("Home")
       ),
       color: Colors.white,
     );

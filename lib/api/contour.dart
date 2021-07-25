@@ -1,4 +1,3 @@
-import 'package:gea/protos/apps/applications/applications.v1.pbgrpc.dart';
 import 'package:gea/protos/apps/contours/contours.v1.pbgrpc.dart';
 import 'package:gea/protos/common/common.v1.pb.dart';
 import 'package:gea/services/env.dart';
@@ -16,8 +15,6 @@ class ContourClient {
   }
 
   Future<EmptyMessage> create({required ContourNameAndDescription contour, required List<ServiceWithoutId> services}) async {
-    // appInfo.contour.add(contour);
-    // return await _client.update(appInfo);
     var contourResponse = await _client.create(contour);
     return _client.addServices(RepeatedServiceWithoutId(contourId: contourResponse.id, service: services));
   }
@@ -37,10 +34,4 @@ class ContourClient {
   Future<ContourInfoWithoutServices> rename(ContourInfoWithoutServices contour) {
     return _client.update(contour);
   }
-  // Future<Iterable<AppWithoutContours>> list() async {
-  //   return await _client
-  //       .list(ListOptions())
-  //       .toList();
-  // }
-
 }
