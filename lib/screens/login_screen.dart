@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gea/api/authentication.dart';
 import 'package:gea/modules/forms/sign_in_form.dart';
 import 'package:gea/modules/forms/sign_up_form.dart';
-import 'package:gea/protos/users/accounts/accounts.v1.pb.dart';
+import 'package:gea/protos/users/accounts/accounts_v1.pb.dart';
 import 'package:gea/screens/home_screen.dart';
 import 'package:gea/ui/heading.dart';
 

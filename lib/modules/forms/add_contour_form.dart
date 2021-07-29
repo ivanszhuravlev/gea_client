@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/view_models/create_contour_model.dart';
-import 'package:gea/protos/apps/contours/contours.v1.pb.dart';
-import 'package:gea/protos/external/gitlab/environments/environments.v1.pb.dart';
-import 'package:gea/protos/external/gitlab/projects/projects.v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/environments/environments_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/projects/projects_v1.pb.dart';
 import 'package:gea/screens/app_screen.dart';
 import 'package:gea/ui/buttons/button_icon_text.dart';
 import 'package:gea/ui/buttons/button_simple.dart';

@@ -1,10 +1,12 @@
-import 'package:gea/protos/external/gitlab/environments/environments.v1.pbgrpc.dart';
+import 'package:gea/api/authentication.dart';
+import 'package:gea/protos/external/gitlab/environments/environments_v1.pbgrpc.dart';
 import 'package:gea/services/env.dart';
 import 'package:grpc/grpc_web.dart';
 import 'package:fixnum/fixnum.dart';
 
 class EnvironmentClient {
   late final EnvironmentsClient _client;
+  final auth = AuthClient();
   final env = Env();
 
   EnvironmentClient() {
@@ -15,11 +17,13 @@ class EnvironmentClient {
   }
 
   Future<List<EnvironmentInfo>> list(Int64 projectId, String name) async {
-    return await _client.list(EnvironmentName(name: name, projectId: projectId)).toList();
+    return await _client.list(EnvironmentName(name: name, projectId: projectId),
+      options: auth.getAuthOptions(),).toList();
   }
 
   Future<EnvironmentInfo> get(Int64 projectId, Int64 envId) {
-    return _client.get(EnvironmentID(projectId: projectId, id: envId));
+    return _client.get(EnvironmentID(projectId: projectId, id: envId),
+      options: auth.getAuthOptions(),);
   }
 
 }

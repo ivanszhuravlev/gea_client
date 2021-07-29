@@ -7,7 +7,7 @@ import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/modules/app_screen/service_details.dart';
 import 'package:gea/modules/app_table.dart';
 import 'package:gea/modules/modal_add_service.dart';
-import 'package:gea/protos/apps/contours/contours.v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
 import 'package:gea/ui/buttons/button.dart';
 import 'package:gea/screens/add_contour_screen.dart';
 import 'package:gea/ui/buttons/accent_button.dart';
@@ -109,7 +109,7 @@ class _AppScreenContent extends StatelessWidget {
                       text: app.name,
                     )),
                 Column(
-                  children: app.contour.map(
+                  children: app.contours.map(
                     (contour) {
                       final service = services[contour.name];
                       return service != null

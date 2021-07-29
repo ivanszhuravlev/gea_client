@@ -3,10 +3,10 @@ import 'package:gea/api/application.dart';
 import 'package:gea/api/contour.dart';
 import 'package:gea/api/environment.dart';
 import 'package:gea/api/project.dart';
-import 'package:gea/protos/apps/applications/applications.v1.pb.dart';
-import 'package:gea/protos/apps/contours/contours.v1.pb.dart';
-import 'package:gea/protos/external/gitlab/environments/environments.v1.pb.dart';
-import 'package:gea/protos/external/gitlab/projects/projects.v1.pb.dart';
+import 'package:gea/protos/apps/applications/applications_v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/environments/environments_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/projects/projects_v1.pb.dart';
 
 class AppScreenModel extends ChangeNotifier {
   final ProjectClient projectClient = ProjectClient();
@@ -34,7 +34,7 @@ class AppScreenModel extends ChangeNotifier {
   }
 
   init() async {
-    app.contour.forEach((_contour) async {
+    app.contours.forEach((_contour) async {
       List<ServiceInfoFull> _servicesList =
           await Future.wait(_contour.services.map(_getServiceInfo).toList());
 
@@ -51,7 +51,7 @@ class AppScreenModel extends ChangeNotifier {
   }
 
   int _getContourIndex(String name) {
-    return app.contour.indexWhere((item) => item.name == name);
+    return app.contours.indexWhere((item) => item.name == name);
   }
 
   Future<void> deleteService(
@@ -61,7 +61,7 @@ class AppScreenModel extends ChangeNotifier {
     if (foundIndex < 0) {
       return null;
     }
-    app.contour[foundIndex].services.removeWhere((e) => e.id == service.id);
+    app.contours[foundIndex].services.removeWhere((e) => e.id == service.id);
 
     _services[contour.name]!.removeWhere((e) => e.id == service.id);
 
@@ -88,7 +88,7 @@ class AppScreenModel extends ChangeNotifier {
     }
 
     await contourClient.addService(
-        RepeatedServiceWithoutId(contourId: contour.id, service: [service]));
+        RepeatedServiceWithoutId(contourId: contour.id, services: [service]));
 
     // TODO: use response from contourClient.addService when it's done on backend
     // app.contour[foundIndex].services
@@ -105,12 +105,12 @@ class AppScreenModel extends ChangeNotifier {
       return null;
     }
 
-    app.contour[index].name = newName;
+    app.contours[index].name = newName;
     _services[newName] = _services[oldName]!;
     _services.remove(oldName);
 
     await contourClient.rename(
-        ContourInfoWithoutServices(id: app.contour[index].id, name: newName));
+        ContourInfoWithoutServices(id: app.contours[index].id, name: newName));
     notifyListeners();
   }
 }

@@ -4,8 +4,8 @@ import 'package:gea/api/application.dart';
 import 'package:gea/api/contour.dart';
 import 'package:gea/api/project.dart';
 import 'package:collection/collection.dart';
-import 'package:gea/protos/apps/applications/applications.v1.pb.dart';
-import 'package:gea/protos/apps/contours/contours.v1.pb.dart';
+import 'package:gea/protos/apps/applications/applications_v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
 
 class AppsListModel extends ChangeNotifier {
   final List<AppWithoutContours> _apps = [];
@@ -26,8 +26,10 @@ class AppsListModel extends ChangeNotifier {
     return newApp.id;
   }
 
-  void list() async{
+  Future<void> list() async{
     var list = await client.list();
+
+    _apps.clear();
     _apps.addAll(list);
     notifyListeners();
   }

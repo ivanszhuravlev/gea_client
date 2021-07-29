@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gea/models/fonts.dart';
 import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/modules/forms/add_contour_form.dart';
-import 'package:gea/protos/apps/contours/contours.v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
 import 'package:gea/ui/heading.dart';
 import 'package:provider/provider.dart';
 

@@ -5,10 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:gea/api/environment.dart';
 import 'package:gea/api/project.dart';
 import 'package:collection/collection.dart';
-import 'package:gea/models/view_models/app_screen_model.dart';
-import 'package:gea/protos/apps/contours/contours.v1.pbgrpc.dart';
-import 'package:gea/protos/external/gitlab/environments/environments.v1.pb.dart';
-import 'package:gea/protos/external/gitlab/projects/projects.v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/environments/environments_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/projects/projects_v1.pb.dart';
 
 class CreateContourModel extends ChangeNotifier {
   final ProjectClient projectClient = ProjectClient();
