@@ -7,6 +7,8 @@ import 'package:gea/screens/home_screen.dart';
 import 'package:gea/ui/heading.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const String route = '/login';
+
   final AuthClient client = AuthClient();
 
   onLogin(BuildContext context) {

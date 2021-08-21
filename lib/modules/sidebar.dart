@@ -10,29 +10,16 @@ class Sidebar extends StatefulWidget {
 }
 
 class _SidebarState extends State<Sidebar> with AfterLayoutMixin<Sidebar> {
-  // Future<void> onMount(BuildContext context) {
-  //
-  // }
-
   @override
   void afterFirstLayout(BuildContext context) {
     var model = Provider.of<AppsListModel>(context, listen: false);
 
-    print("GET LIST ON LAYOUT ________________________");
     model.list();
   }
 
   @override
   Widget build(BuildContext context) {
     var model = context.watch<AppsListModel>();
-    // var model = Provider.of<AppsListModel>(context, listen: false);
-
-    // return FutureBuilder(
-    //   future: onMount(context),
-    //   builder: (BuildContext context, AsyncSnapshot<void> snapshot) {
-    //     return SidebarContent();
-    //   },
-    // );
 
     return Container(
       child: Padding(

@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:gea/protos/common/common_v1.pb.dart';
 import 'package:gea/protos/users/accounts/accounts_v1.pb.dart';
 import 'package:gea/protos/users/authentication/authentication_v1.pbgrpc.dart';
 import 'package:gea/protos/users/authorization/authorization_v1.pbgrpc.dart';
+import 'package:gea/services/auth_storage.dart';
 import 'package:gea/services/env.dart';
-import 'package:gea/services/storage_local.dart';
 import 'package:grpc/grpc_web.dart';
-import 'package:fingerprintjs/fingerprintjs.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 
+import 'auth_guard_interceptor.dart';
+
 class AuthClient {
-  final StorageLocal localStorage = new StorageLocal();
+  final authStorage = AuthStorage();
   late final AuthenticationClient _client;
   late final AuthorizationClient _clientAuthorization;
   final env = Env();
@@ -19,15 +18,14 @@ class AuthClient {
     final channel = GrpcWebClientChannel.xhr(Uri.parse(env.apiHost));
 
     _client = new AuthenticationClient(channel);
-    _clientAuthorization = new AuthorizationClient(channel);
-  }
-
-  Future<String> _getFingerprint() {
-    return Fingerprint.getHash();
+    _clientAuthorization = new AuthorizationClient(
+      channel,
+      interceptors: [AuthGuardInterceptor()],
+    );
   }
 
   Future<CallOptions> _getFingerprintOptions() async {
-    var fingerprint = await _getFingerprint();
+    var fingerprint = await authStorage.getFingerprint();
     return CallOptions(metadata: {'browser-fingerprint': fingerprint});
   }
 
@@ -48,22 +46,28 @@ class AuthClient {
   }
 
   Future<void> updateToken() async {
-    var creds = _getCreds();
+    var credsRestored = authStorage.getCreds();
+    var creds = credsRestored ?? Creds(jwt: '', rt: '', userId: '');
 
-    if (creds == null) {
-      throw new Error();
-    }
-      bool hasExpired = JwtDecoder.isExpired(creds.jwt);
-    print("TO REFRESH" + hasExpired.toString());
+    bool hasExpired = JwtDecoder.isExpired(creds.jwt);
 
-      if (hasExpired) {
-        var fingerprint = await _getFingerprint();
+    if (hasExpired) {
+      var fingerprint = await authStorage.getFingerprint();
 
-        var headers = await _clientAuthorization.refreshToken(EmptyMessage(), options: CallOptions(
-          metadata: {'authorization': creds.jwt, 'refresh-token': creds.rt, 'browser-fingerprint': fingerprint},
-        )).headers;
+      var req = _clientAuthorization.refreshToken(
+        AccountId()..id = creds.userId,
+        options: CallOptions(
+          metadata: {
+            'authorization': creds.jwt,
+            'refresh-token': creds.rt,
+            'browser-fingerprint': fingerprint
+          },
+        ),
+      );
 
-        print("REFRESHED: " + headers.keys.toString());
+      var headers = await req.headers;
+
+      await authStorage.saveCreds(headers[JWT], headers[RT], creds.userId);
     }
   }
 
@@ -75,60 +79,32 @@ class AuthClient {
     var rt = headers[RT];
     var userId = accountId.id;
 
-    if (_checkCreds(jwt, rt, userId)) {
-      localStorage.set('jwt', jwt!);
-      localStorage.set('rt', rt!);
-      localStorage.set('userId', userId!);
-    } else {
-      throw new Error();
-    }
-  }
-
-  bool _checkCreds(String? jwt, String? rt, String? userId) {
-    // print("CHECK: " + jwt.toString() + ', ' + rt.toString() + ', ' + userId.toString());
-    return jwt != null && rt != null && userId != null;
-  }
-
-  Creds? _getCreds() {
-    var jwt = localStorage.get('jwt');
-    var rt = localStorage.get('rt');
-    var userId = localStorage.get('userId');
-
-    if (_checkCreds(jwt, rt, userId)) {
-      return Creds(jwt: jwt!, rt: rt!, userId: userId!);
-    } else {
-      return null;
-    }
+    await authStorage.saveCreds(jwt, rt, userId);
   }
 
   bool isLoggedIn() {
-    // print("ISLOGGEDIN");
-    return _getCreds() != null;
+    return authStorage.getCreds() != null;
   }
 
-  CallOptions getAuthOptions() {
-    // print("getAuthOptions");
+  Future<CallOptions> getAuthOptions() async {
+    await updateToken();
 
-    var creds = _getCreds();
-
-    updateToken();
+    var creds = authStorage.getCreds();
+    var fingerprint = await authStorage.getFingerprint();
 
     if (creds != null) {
       return CallOptions(
-          metadata: {'authorization': creds.jwt},
+        metadata: {
+          'authorization': creds.jwt,
+          'user-id': creds.userId,
+          'refresh-token': creds.userId,
+          'browser-fingerprint': fingerprint
+        },
       );
     } else {
       throw new Error();
     }
   }
-}
-
-class Creds {
-  final String jwt;
-  final String rt;
-  final String userId;
-
-  Creds({required this.jwt, required this.rt, required this.userId});
 }
 
 const JWT = 'authorization';

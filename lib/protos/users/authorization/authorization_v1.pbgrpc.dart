@@ -10,15 +10,15 @@ import 'dart:async' as $async;
 import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
-import '../../common/common_v1.pb.dart' as $1;
 import '../accounts/accounts_v1.pb.dart' as $3;
+import '../../common/common_v1.pb.dart' as $1;
 export 'authorization_v1.pb.dart';
 
 class AuthorizationClient extends $grpc.Client {
   static final _$refreshToken =
-      $grpc.ClientMethod<$1.EmptyMessage, $1.EmptyMessage>(
+      $grpc.ClientMethod<$3.AccountId, $1.EmptyMessage>(
           '/users.Authorization/RefreshToken',
-          ($1.EmptyMessage value) => value.writeToBuffer(),
+          ($3.AccountId value) => value.writeToBuffer(),
           ($core.List<$core.int> value) => $1.EmptyMessage.fromBuffer(value));
   static final _$validateToken =
       $grpc.ClientMethod<$1.EmptyMessage, $1.EmptyMessage>(
@@ -36,7 +36,7 @@ class AuthorizationClient extends $grpc.Client {
       $core.Iterable<$grpc.ClientInterceptor>? interceptors})
       : super(channel, options: options, interceptors: interceptors);
 
-  $grpc.ResponseFuture<$1.EmptyMessage> refreshToken($1.EmptyMessage request,
+  $grpc.ResponseFuture<$1.EmptyMessage> refreshToken($3.AccountId request,
       {$grpc.CallOptions? options}) {
     return $createUnaryCall(_$refreshToken, request, options: options);
   }
@@ -56,12 +56,12 @@ abstract class AuthorizationServiceBase extends $grpc.Service {
   $core.String get $name => 'users.Authorization';
 
   AuthorizationServiceBase() {
-    $addMethod($grpc.ServiceMethod<$1.EmptyMessage, $1.EmptyMessage>(
+    $addMethod($grpc.ServiceMethod<$3.AccountId, $1.EmptyMessage>(
         'RefreshToken',
         refreshToken_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $1.EmptyMessage.fromBuffer(value),
+        ($core.List<$core.int> value) => $3.AccountId.fromBuffer(value),
         ($1.EmptyMessage value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$1.EmptyMessage, $1.EmptyMessage>(
         'ValidateToken',
@@ -80,7 +80,7 @@ abstract class AuthorizationServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.EmptyMessage> refreshToken_Pre(
-      $grpc.ServiceCall call, $async.Future<$1.EmptyMessage> request) async {
+      $grpc.ServiceCall call, $async.Future<$3.AccountId> request) async {
     return refreshToken(call, await request);
   }
 
@@ -95,7 +95,7 @@ abstract class AuthorizationServiceBase extends $grpc.Service {
   }
 
   $async.Future<$1.EmptyMessage> refreshToken(
-      $grpc.ServiceCall call, $1.EmptyMessage request);
+      $grpc.ServiceCall call, $3.AccountId request);
   $async.Future<$1.EmptyMessage> validateToken(
       $grpc.ServiceCall call, $1.EmptyMessage request);
   $async.Future<$3.AccountId> parseIdFromToken(
