@@ -1,7 +1,6 @@
 import 'package:fingerprintjs/fingerprintjs.dart';
 import 'package:gea/services/storage_local.dart';
 
-
 class AuthStorage {
   final StorageLocal localStorage = new StorageLocal();
 
@@ -30,8 +29,6 @@ class AuthStorage {
       localStorage.set('jwt', jwt!);
       localStorage.set('rt', rt!);
       localStorage.set('userId', userId!);
-    } else {
-      throw new Error();
     }
   }
 }

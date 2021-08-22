@@ -34,7 +34,7 @@ class AuthClient {
 
     var resp = _client.signUp(creds, options: options);
 
-    saveCreds(resp);
+    await saveCreds(resp);
   }
 
   Future<void> signIn(AccountCreds creds) async {
@@ -42,14 +42,14 @@ class AuthClient {
 
     var resp = _client.signIn(creds, options: options);
 
-    saveCreds(resp);
+    await saveCreds(resp);
   }
 
   Future<void> updateToken() async {
     var credsRestored = authStorage.getCreds();
     var creds = credsRestored ?? Creds(jwt: '', rt: '', userId: '');
 
-    bool hasExpired = JwtDecoder.isExpired(creds.jwt);
+    bool hasExpired = credsRestored == null || JwtDecoder.isExpired(creds.jwt);
 
     if (hasExpired) {
       var fingerprint = await authStorage.getFingerprint();
@@ -71,7 +71,7 @@ class AuthClient {
     }
   }
 
-  void saveCreds(ResponseFuture<AccountId> resp) async {
+  Future<void> saveCreds(ResponseFuture<AccountId> resp) async {
     var accountId = await resp;
     var headers = await resp.headers;
 

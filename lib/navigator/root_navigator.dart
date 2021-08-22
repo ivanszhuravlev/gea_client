@@ -31,7 +31,7 @@ class RootNavigator extends StatelessWidget {
           String match;
 
           try {
-            match = firstMatch?.group(0) ?? "";
+            match = firstMatch?.group(1) ?? "";
           } catch (_) {
             match = "";
           }
@@ -46,7 +46,7 @@ class RootNavigator extends StatelessWidget {
               appBar: PreferredSize(
                   child: Header(), preferredSize: const Size.fromHeight(80.0)),
               body: RootScreen(
-                route: match,
+                route: settings.name ?? "",
                 child: matchedPath.builder(context, match),
               ),
             ),

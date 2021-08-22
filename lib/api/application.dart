@@ -29,7 +29,7 @@ class ApplicationClient {
   Future<Iterable<AppWithoutContours>> list() async {
     var opts = await auth.getAuthOptions();
 
-    return await _client.list(ListOptions(), options: opts).toList();
+    return await _client.list(ListOptions(added: true), options: opts).toList();
   }
 
   Future<AppWithoutContours> updateApp(
