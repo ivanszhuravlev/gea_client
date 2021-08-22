@@ -7,7 +7,7 @@ import 'package:gea/ui/heading.dart';
 import 'package:gea/ui/sidebar_right.dart';
 
 class ServiceDetails extends StatefulWidget {
-  final ServiceInfo? service;
+  final ServiceInfoFull? service;
   final void Function() onClose;
 
   ServiceDetails({required this.service, required this.onClose});
@@ -70,7 +70,7 @@ class _ServiceDetailsState extends State<ServiceDetails> {
 }
 
 class _ServiceDetailsContent extends StatelessWidget {
-  final ServiceInfo service;
+  final ServiceInfoFull service;
   final void Function() onClose;
 
   _ServiceDetailsContent({required this.service, required this.onClose});

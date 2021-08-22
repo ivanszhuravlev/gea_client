@@ -1,26 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:gea/api/application.dart';
+import 'package:gea/api/contour.dart';
 import 'package:gea/api/environment.dart';
 import 'package:gea/api/project.dart';
-import 'package:gea/protos/applications/applications.v1.pb.dart';
-import 'package:gea/protos/environments/environments.v1.pb.dart';
-import 'package:gea/protos/projects/projects.v1.pb.dart';
+import 'package:gea/protos/apps/applications/applications_v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/environments/environments_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/projects/projects_v1.pb.dart';
 
 class AppScreenModel extends ChangeNotifier {
   final ProjectClient projectClient = ProjectClient();
   final EnvironmentClient envClient = EnvironmentClient();
   final ApplicationClient appClient = ApplicationClient();
+  final ContourClient contourClient = ContourClient();
 
-  final AppInfo app;
-  Map<String, List<ServiceInfo>> _services = Map();
+  late AppFullInfo app;
+  Map<String, List<ServiceInfoFull>> _services = Map();
   _ChosenService? _chosenService;
 
-  AppScreenModel({required this.app}) {
+  AppScreenModel({required AppWithoutContours app}) {
     init();
+    appClient.get(app).then((value) => this.app = value);
   }
 
-  Map<String, List<ServiceInfo>> get services => _services;
-  ServiceInfo? get chosenService {
+  Map<String, List<ServiceInfoFull>> get services => _services;
+  ServiceInfoFull? get chosenService {
     if (_chosenService == null) {
       return null;
     }
@@ -30,39 +34,39 @@ class AppScreenModel extends ChangeNotifier {
   }
 
   init() async {
-    app.contour.forEach((_contour) async {
-      List<ServiceInfo> _servicesList =
-          await Future.wait(_contour.service.map(_getServiceInfo).toList());
+    app.contours.forEach((_contour) async {
+      List<ServiceInfoFull> _servicesList =
+          await Future.wait(_contour.services.map(_getServiceInfo).toList());
 
       _services[_contour.name] = _servicesList;
       notifyListeners();
     });
   }
 
-  Future<ServiceInfo> _getServiceInfo(Service service) async {
+  Future<ServiceInfoFull> _getServiceInfo(ServiceInfo service) async {
     final project = await projectClient.get(service.project);
     final env = await envClient.get(service.project, service.environment);
 
-    return ServiceInfo(project: project, env: env);
+    return ServiceInfoFull(project: project, env: env, id: service.id);
   }
 
   int _getContourIndex(String name) {
-    return app.contour.indexWhere((item) => item.name == name);
+    return app.contours.indexWhere((item) => item.name == name);
   }
 
-  Future<void> deleteService(Contour contour, ServiceInfo service) async {
+  Future<void> deleteService(
+      ContourInfo contour, ServiceInfoFull service) async {
     int foundIndex = _getContourIndex(contour.name);
 
     if (foundIndex < 0) {
       return null;
     }
-    app.contour[foundIndex].service.removeWhere((e) =>
-        e.project == service.project.id && e.environment == service.env.id);
+    app.contours[foundIndex].services.removeWhere((e) => e.id == service.id);
 
-    _services[contour.name]!.removeWhere((e) =>
-        e.project.id == service.project.id && e.env.id == service.env.id);
+    _services[contour.name]!.removeWhere((e) => e.id == service.id);
 
-    await appClient.updateApp(appInfo: app);
+    await contourClient.removeService(
+        ServiceIdAndContourId(contourId: contour.id, serviceId: service.id));
     notifyListeners();
   }
 
@@ -76,19 +80,21 @@ class AppScreenModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addService(ServiceInfo service, Contour contour) async {
+  void addService(ServiceWithoutId service, ContourInfo contour) async {
     int foundIndex = _getContourIndex(contour.name);
 
     if (foundIndex < 0) {
       return null;
     }
 
-    app.contour[foundIndex].service
-        .add(Service(project: service.project.id, environment: service.env.id));
+    await contourClient.addService(
+        RepeatedServiceWithoutId(contourId: contour.id, services: [service]));
 
-    _services[contour.name]!.add(service);
+    // TODO: use response from contourClient.addService when it's done on backend
+    // app.contour[foundIndex].services
+    //     .add(ServiceInfo(project: service.project, environment: service.environment));
+    // _services[contour.name]!.add(service);
 
-    await appClient.updateApp(appInfo: app);
     notifyListeners();
   }
 
@@ -99,20 +105,22 @@ class AppScreenModel extends ChangeNotifier {
       return null;
     }
 
-    app.contour[index].name = newName;
+    app.contours[index].name = newName;
     _services[newName] = _services[oldName]!;
     _services.remove(oldName);
 
-    await appClient.updateApp(appInfo: app);
+    await contourClient.rename(
+        ContourInfoWithoutServices(id: app.contours[index].id, name: newName));
     notifyListeners();
   }
 }
 
-class ServiceInfo {
+class ServiceInfoFull {
   final ProjectInfo project;
   final EnvironmentInfo env;
+  final String id;
 
-  ServiceInfo({required this.project, required this.env});
+  ServiceInfoFull({required this.project, required this.env, required this.id});
 }
 
 class _ChosenService {

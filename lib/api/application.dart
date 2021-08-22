@@ -1,36 +1,49 @@
-import 'package:gea/protos/applications/applications.v1.pb.dart';
-import 'package:gea/protos/applications/applications.v1.pbgrpc.dart';
-import 'package:gea/protos/common/common.pb.dart';
+import 'package:gea/api/authentication.dart';
+import 'package:gea/protos/apps/applications/applications_v1.pbgrpc.dart';
 import 'package:gea/services/env.dart';
 import 'package:grpc/grpc_web.dart';
 
+import 'auth_guard_interceptor.dart';
+
 class ApplicationClient {
   late final ApplicationsClient _client;
+  final auth = AuthClient();
   final env = Env();
 
   ApplicationClient() {
-    final channel =
-        GrpcWebClientChannel.xhr(Uri.parse(env.apiHost));
+    final channel = GrpcWebClientChannel.xhr(Uri.parse(env.apiHost));
 
-    _client = new ApplicationsClient(channel);
+    _client = new ApplicationsClient(
+      channel,
+      interceptors: [AuthGuardInterceptor()],
+    );
   }
 
-  Future<AppInfo> create(String name) async {
-    return await _client.create(AppName()..name = name);
+  Future<AppWithoutContours> create(String name) async {
+    return await _client.create(
+      AppNameAndDescription()..name = name,
+      options: await auth.getAuthOptions(),
+    );
   }
 
-  Future<Iterable<AppInfo>> list() async {
-    return await _client
-        .list(EmptyMessage())
-        .toList();
+  Future<Iterable<AppWithoutContours>> list() async {
+    var opts = await auth.getAuthOptions();
+
+    return await _client.list(ListOptions(added: true), options: opts).toList();
   }
 
-  Future<AppInfo> createContour({required AppInfo appInfo, required Contour contour}) async {
-    appInfo.contour.add(contour);
-    return await _client.update(appInfo);
+  Future<AppWithoutContours> updateApp(
+      {required AppWithoutContours appInfo}) async {
+    return await _client.update(
+      appInfo,
+      options: await auth.getAuthOptions(),
+    );
   }
 
-  Future<AppInfo> updateApp({required AppInfo appInfo}) async {
-    return await _client.update(appInfo);
+  Future<AppFullInfo> get(AppWithoutContours app) async {
+    return await _client.get(
+      AppId()..id = app.id,
+      options: await auth.getAuthOptions(),
+    );
   }
 }

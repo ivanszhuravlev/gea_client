@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:gea/constants/app_colors.dart';
 import 'package:gea/models/fonts.dart';
 import 'package:gea/models/view_models/app_screen_model.dart';
-import 'package:gea/protos/applications/applications.v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
 import 'package:gea/ui/heading.dart';
 
 class AppTable extends StatelessWidget {
-  final List<ServiceInfo> serviceInfos;
+  final List<ServiceInfoFull> serviceInfos;
   final OnDelete onDelete;
-  final Contour contour;
+  final ContourInfo contour;
   final OnChoose onChoose;
 
   AppTable({
@@ -42,7 +42,7 @@ class AppTable extends StatelessWidget {
         ...serviceInfos.asMap().entries.map(
           (entry) {
             final int index = entry.key;
-            final ServiceInfo service = entry.value;
+            final ServiceInfoFull service = entry.value;
 
             return DataRow(
               cells: <DataCell>[
@@ -103,8 +103,8 @@ class DeleteButton extends StatelessWidget {
 
 typedef void OnDelete({
   required BuildContext context,
-  required Contour contour,
-  required ServiceInfo service,
+  required ContourInfo contour,
+  required ServiceInfoFull service,
 });
 
 typedef void OnChoose({

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gea/models/apps_list_model.dart';
 import 'package:gea/models/view_models/create_contour_model.dart';
-import 'package:gea/protos/environments/environments.v1.pb.dart';
-import 'package:gea/protos/projects/projects.v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/environments/environments_v1.pb.dart';
+import 'package:gea/protos/external/gitlab/projects/projects_v1.pb.dart';
 import 'package:gea/screens/app_screen.dart';
 import 'package:gea/ui/buttons/button_icon_text.dart';
 import 'package:gea/ui/buttons/button_simple.dart';
@@ -97,18 +98,22 @@ class _FormState extends State<AddContourForm> {
             },
           ).toList(),
           ElevatedButton(
-              onPressed: () {
-                if (widget._formKey.currentState!.validate()) {
-                  var contour = contourModel.getReadyContour();
+            onPressed: () {
+              if (widget._formKey.currentState!.validate()) {
+                var contour = contourModel.getReadyContour();
+                List<ServiceWithoutId> services = contourModel
+                    .getServices()
+                    .whereType<ServiceWithoutId>()
+                    .toList();
 
-                  if (contour != null) {
-                    appModel.addContour(
-                        contourModel.appId, contour);
-                    Navigator.of(context).pushNamed('${AppScreen.route}/${contourModel.appId}');
-                  }
+                if (contour != null) {
+                  appModel.addContour(contour, services);
+                  Navigator.of(context)
+                      .pushNamed('${AppScreen.route}/${contourModel.appId}');
                 }
-              },
-              child: Text("Create"),
+              }
+            },
+            child: Text("Create"),
           )
         ],
       ),
@@ -223,8 +228,7 @@ class EnvChooseField extends StatelessWidget {
           child: _EnvsDropdown(
             rowKey: rowKey,
             onChosen: (String name) {
-              model.envNames[rowKey]?.value =
-                  TextEditingValue(text: name);
+              model.envNames[rowKey]?.value = TextEditingValue(text: name);
             },
           ),
         ),

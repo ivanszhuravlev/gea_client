@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:gea/models/fonts.dart';
-import 'package:gea/models/view_models/app_screen_model.dart';
 import 'package:gea/models/view_models/create_contour_model.dart';
 import 'package:gea/modules/forms/add_contour_form.dart';
-import 'package:gea/protos/applications/applications.v1.pb.dart';
+import 'package:gea/protos/apps/contours/contours_v1.pb.dart';
 import 'package:gea/ui/heading.dart';
 import 'package:provider/provider.dart';
 
 class ModalAddService extends StatelessWidget {
-  final Contour contour;
-  final void Function(ServiceInfo) onSubmit;
+  final ContourInfo contour;
+  final void Function(ServiceWithoutId) onSubmit;
 
   ModalAddService({required this.contour, required this.onSubmit});
 
@@ -35,7 +34,7 @@ class ModalAddService extends StatelessWidget {
                         EnvChooseField(rowKey: key),
                         ElevatedButton(
                           onPressed: () {
-                            var services = model.getServiceInfos();
+                            var services = model.getServices();
 
                             if (services.length > 0 && services[0] != null) {
                               onSubmit(services[0]!);
